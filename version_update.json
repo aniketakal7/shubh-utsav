@@ -1,0 +1,19 @@
+{
+  "latestVersionCode": 2,
+  "latestVersionName": "1.1.0",
+  "minSupportedVersionCode": 1,
+  "isForceUpdate": false,
+  "titles": {
+    "en": "Shubh Utsav 1.1.0 Available! 🎉",
+    "hi": "शुभ उत्सव 1.1.0 उपलब्ध है! 🎉",
+    "mr": "शुभ उत्सव १.१.० उपलब्ध आहे! 🎉"
+  },
+  "releaseNotes": {
+    "en": "• Added Ganesh Chaturthi 2025 & Navratri Muhurat timings\n• Offline Vedic Panchang calculations & sunrise/sunset accuracy\n• Interactive Puja steps & shopping checklist\n• Performance optimizations & smooth animations",
+    "hi": "• गणेश चतुर्थी 2025 और नवरात्रि के नए मुहूर्त जोड़े गए\n• ऑफलाइन वैदिक पंचांग गणना और सूर्योदय/सूर्यास्त समय\n• इंटरैक्टिव पूजा विधि और सामग्री चेकलिस्ट\n• बेहतर गति और सहज अनुभव",
+    "mr": "• गणेशोत्सव २०२५ व नवरात्रौत्सव अचूक मुहूर्त समाविष्ट\n• ऑफलाइन वैदिक पंचांग आणि सूर्योदय/सूर्यास्त अचूक वेळ\n• संवादात्मक पूजा विधी व साहित्य चेकलिस्ट\n• वेगवान आणि अधिक सुंदर अनुभव"
+  },
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/latest",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.1.0/shubh-utsav-v1.1.0.apk",
+  "publishedDate": "2025-01-01"
+}
