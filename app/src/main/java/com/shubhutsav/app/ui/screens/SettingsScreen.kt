@@ -1,18 +1,15 @@
 package com.shubhutsav.app.ui.screens
 
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -826,101 +823,6 @@ fun SettingsScreen(
                                     else -> "Rate App"
                                 },
                                 fontSize = 12.sp
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    // Developer GitHub Profile & Repository Link
-                    Surface(
-                        shape = RoundedCornerShape(14.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-                        border = BorderStroke(1.dp, VedicGold.copy(alpha = 0.4f)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                try {
-                                    val gitHubIntent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://github.com/aniketakal7")
-                                    )
-                                    context.startActivity(gitHubIntent)
-                                } catch (e: Exception) {
-                                    Toast.makeText(
-                                        context,
-                                        when (language) {
-                                            "mr" -> "गिटहब लिंक उघडता आली नाही"
-                                            "hi" -> "गिटहब लिंक नहीं खोला जा सका"
-                                            else -> "Could not open GitHub link"
-                                        },
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(38.dp)
-                                    .clip(CircleShape)
-                                    .background(KesariyaSaffron.copy(alpha = 0.15f)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Code,
-                                    contentDescription = "GitHub",
-                                    tint = KesariyaSaffron,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = when (language) {
-                                            "mr" -> "विकसक प्रोफाइल (GitHub)"
-                                            "hi" -> "डेवलपर प्रोफाइल (GitHub)"
-                                            else -> "Developer GitHub"
-                                        },
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 13.sp
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Surface(
-                                        shape = RoundedCornerShape(6.dp),
-                                        color = KesariyaSaffron.copy(alpha = 0.15f)
-                                    ) {
-                                        Text(
-                                            text = "@aniketakal7",
-                                            fontSize = 10.sp,
-                                            fontWeight = FontWeight.SemiBold,
-                                            color = KesariyaSaffron,
-                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                    text = when (language) {
-                                        "mr" -> "प्रकल्प आणि अपडेट्स पाहण्यासाठी भेट द्या"
-                                        "hi" -> "प्रोजेक्ट्स और अपडेट्स देखने के लिए विज़िट करें"
-                                        else -> "Visit profile, view source code & contribute"
-                                    },
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                                contentDescription = "Open GitHub",
-                                tint = VedicGold,
-                                modifier = Modifier.size(18.dp)
                             )
                         }
                     }
