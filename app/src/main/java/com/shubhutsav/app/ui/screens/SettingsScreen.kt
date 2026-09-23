@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,7 +30,9 @@ import com.shubhutsav.app.data.UpdateCheckResult
 import com.shubhutsav.app.data.UpdateInfo
 import com.shubhutsav.app.data.UpdateManager
 import com.shubhutsav.app.notifications.NotificationHelper
+import com.shubhutsav.app.data.AuthManager
 import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.AuthDialog
 import com.shubhutsav.app.ui.components.CityPickerDialog
 import com.shubhutsav.app.ui.components.PremiumUpgradeDialog
 import com.shubhutsav.app.ui.theme.*
@@ -55,6 +58,7 @@ fun SettingsScreen(
 
     var showCityPicker by remember { mutableStateOf(false) }
     var showPremiumDialog by remember { mutableStateOf(false) }
+    var showAuthDialog by remember { mutableStateOf(false) }
     var remindersEnabled by remember { mutableStateOf(prefs.remindersEnabled) }
     var ritualStyle by remember { mutableStateOf(prefs.ritualStyle) }
 
@@ -81,6 +85,22 @@ fun SettingsScreen(
             onUpgrade = {
                 onUpgradePremium()
                 showPremiumDialog = false
+            }
+        )
+    }
+
+    if (showAuthDialog) {
+        AuthDialog(
+            isHindi = language == "hi",
+            language = language,
+            onDismiss = { showAuthDialog = false },
+            onAuthSuccess = {
+                val welcomeMsg = when (language) {
+                    "mr" -> "शुभ उत्सवात आपले स्वागत आहे! 🙏"
+                    "hi" -> "शुभ उत्सव में आपका स्वागत है! 🙏"
+                    else -> "Welcome to Shubh Utsav! 🙏"
+                }
+                Toast.makeText(context, welcomeMsg, Toast.LENGTH_SHORT).show()
             }
         )
     }
@@ -193,6 +213,143 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.height(2.dp))
+
+            // User Profile / Firebase Authentication Card
+            val currentUser = AuthManager.currentUser.value
+            val isUserLoggedIn = AuthManager.isLoggedIn && !AuthManager.isAnonymous
+
+            Card(
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(
+                    1.dp,
+                    if (isUserLoggedIn) VedicGold.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(18.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val avatarBgModifier = if (isUserLoggedIn) {
+                        Modifier.background(PanchangCardGradient)
+                    } else {
+                        Modifier.background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f))
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                            .then(avatarBgModifier),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = if (isUserLoggedIn) {
+                                val n = AuthManager.displayName
+                                if (n.isNotBlank()) n.take(1).uppercase() else "👤"
+                            } else "👤",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isUserLoggedIn) VedicGoldLight else MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = if (isUserLoggedIn) AuthManager.displayName else {
+                                    when (language) {
+                                        "mr" -> "अतिथी भक्त (Guest)"
+                                        "hi" -> "अतिथि भक्त (Guest)"
+                                        else -> "Guest Devotee"
+                                    }
+                                },
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            if (isUserLoggedIn) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = VedicGold.copy(alpha = 0.15f)
+                                ) {
+                                    Text(
+                                        text = "Cloud Sync ✨",
+                                        color = RoyalMaroon,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        Text(
+                            text = if (isUserLoggedIn) {
+                                AuthManager.email ?: (when (language) {
+                                    "mr" -> "खाते जोडले गेले आहे"
+                                    "hi" -> "खाता जुड़ा हुआ है"
+                                    else -> "Account Connected"
+                                })
+                            } else {
+                                when (language) {
+                                    "mr" -> "आपली पूजा यादी व सण जतन करा"
+                                    "hi" -> "अपनी पूजा सामग्री व व्रत सुरक्षित रखें"
+                                    else -> "Sign in to backup your festival data"
+                                }
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    if (isUserLoggedIn) {
+                        IconButton(
+                            onClick = {
+                                AuthManager.signOut()
+                                val logoutMsg = when (language) {
+                                    "mr" -> "लॉगआउट यशस्वी"
+                                    "hi" -> "लॉगआउट सफल"
+                                    else -> "Logged out successfully"
+                                }
+                                Toast.makeText(context, logoutMsg, Toast.LENGTH_SHORT).show()
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Logout,
+                                contentDescription = "Sign Out",
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    } else {
+                        Button(
+                            onClick = { showAuthDialog = true },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = RoyalMaroon),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "लॉगिन"
+                                    "hi" -> "लॉगिन"
+                                    else -> "Sign In"
+                                },
+                                color = VedicGoldLight,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
 
             // Premium Membership Status Showcase Card
             Card(
