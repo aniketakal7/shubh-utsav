@@ -34,6 +34,7 @@ import com.shubhutsav.app.location.LocationHelper
 import com.shubhutsav.app.location.LocationResult
 import com.shubhutsav.app.ui.components.CityPickerDialog
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
+import com.shubhutsav.app.ui.theme.OnboardingHeroGradient
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.VedicGold
 
@@ -222,12 +223,20 @@ fun OnboardingScreen(
             // Welcoming Spiritual Medallion
             Box(
                 modifier = Modifier
-                    .size(76.dp)
+                    .size(96.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)),
+                    .background(OnboardingHeroGradient),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "🪔", fontSize = 42.sp)
+                Box(
+                    modifier = Modifier
+                        .size(84.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.background),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "🪔", fontSize = 44.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -506,11 +515,12 @@ fun OnboardingScreen(
                     onComplete(selectedLanguage == "hi", selectedCity.id, selectedRitualStyle)
                     onCompleteLanguage(selectedLanguage, selectedCity.id, selectedRitualStyle)
                 },
-                shape = RoundedCornerShape(18.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(22.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = RoyalMaroon),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp)
+                    .height(56.dp)
             ) {
                 Text(
                     text = when (selectedLanguage) {

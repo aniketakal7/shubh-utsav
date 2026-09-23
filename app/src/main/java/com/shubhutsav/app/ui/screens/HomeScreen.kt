@@ -1,25 +1,17 @@
 package com.shubhutsav.app.ui.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,12 +19,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.City
 import com.shubhutsav.app.data.FestivalRepository
+import com.shubhutsav.app.ui.components.AppBottomNav
+import com.shubhutsav.app.ui.components.AppDest
 import com.shubhutsav.app.ui.components.AppTopBar
 import com.shubhutsav.app.ui.components.CityPickerDialog
+import com.shubhutsav.app.ui.components.EmojiWell
 import com.shubhutsav.app.ui.components.FestivalMiniCard
 import com.shubhutsav.app.ui.components.PanchangCard
-import com.shubhutsav.app.ui.theme.CardBorderGold
-import com.shubhutsav.app.ui.theme.CardBorderSubtle
+import com.shubhutsav.app.ui.components.SectionHeader
+import com.shubhutsav.app.ui.theme.GreetingWashGradient
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.VedicGold
@@ -105,87 +100,15 @@ fun HomeScreen(
                 onSettingsClick = { navController.navigate("settings") }
             )
         },
+        containerColor = Color.Transparent,
         bottomBar = {
-            Surface(
-                tonalElevation = 8.dp,
-                shadowElevation = 8.dp,
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 0.dp
-                ) {
-                    NavigationBarItem(
-                        selected = true,
-                        onClick = { /* Already on Home */ },
-                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "मुख्य"
-                                    "hi" -> "मुख्य"
-                                    else -> "Home"
-                                },
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("calendar") },
-                        icon = { Icon(Icons.Default.CalendarMonth, contentDescription = "Calendar") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "कॅलेंडर"
-                                    "hi" -> "कैलेंडर"
-                                    else -> "Calendar"
-                                },
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("settings") },
-                        icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "सेटिंग्ज"
-                                    "hi" -> "सेटिंग्स"
-                                    else -> "Settings"
-                                },
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                }
-            }
+            AppBottomNav(
+                selected = AppDest.Home,
+                language = language,
+                onHome = {},
+                onCalendar = { navController.navigate("calendar") },
+                onSettings = { navController.navigate("settings") }
+            )
         }
     ) { padding ->
         LazyColumn(
@@ -193,50 +116,35 @@ fun HomeScreen(
                 .padding(padding)
                 .fillMaxSize()
                 .padding(horizontal = 20.dp),
-            contentPadding = PaddingValues(top = 12.dp, bottom = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            contentPadding = PaddingValues(top = 8.dp, bottom = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(22.dp)
         ) {
-            // Dynamic Time-aware Vedic Greeting Card
             item {
-                Spacer(modifier = Modifier.height(4.dp))
-                Card(
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-                    modifier = Modifier.fillMaxWidth()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(28.dp))
+                        .background(GreetingWashGradient)
+                        .padding(horizontal = 4.dp, vertical = 8.dp)
                 ) {
                     Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = greetingInfo.first,
-                                color = KesariyaSaffron,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
-                            Spacer(modifier = Modifier.height(2.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = greetingInfo.second,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "🪔", fontSize = 24.sp)
-                        }
+                        EmojiWell(emoji = "🪔", tint = KesariyaSaffron, size = 56.dp, emojiSize = 28)
                     }
                 }
             }
@@ -251,42 +159,21 @@ fun HomeScreen(
                 )
             }
 
-            // Upcoming Celebrations Header & Horizontal Row
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "🎉", fontSize = 18.sp)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = when (language) {
-                                "mr" -> "येणारे मुख्य उत्सव"
-                                "hi" -> "आने वाले मुख्य उत्सव"
-                                else -> "Upcoming Celebrations"
-                            },
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-
-                    TextButton(onClick = { navController.navigate("calendar") }) {
-                        Text(
-                            text = when (language) {
-                                "mr" -> "सर्व पहा >"
-                                "hi" -> "सभी देखें >"
-                                else -> "View All >"
-                            },
-                            color = KesariyaSaffron,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
+                SectionHeader(
+                    emoji = "🎉",
+                    title = when (language) {
+                        "mr" -> "येणारे मुख्य उत्सव"
+                        "hi" -> "आने वाले मुख्य उत्सव"
+                        else -> "Upcoming Celebrations"
+                    },
+                    actionLabel = when (language) {
+                        "mr" -> "सर्व पहा"
+                        "hi" -> "सभी देखें"
+                        else -> "View all"
+                    },
+                    onAction = { navController.navigate("calendar") }
+                )
 
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -303,23 +190,15 @@ fun HomeScreen(
                 }
             }
 
-            // Quick Actions Section
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "⚡", fontSize = 18.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = when (language) {
-                            "mr" -> "जलद मार्गदर्शिका व याद्या"
-                            "hi" -> "त्वरित मार्गदर्शिका व सूचियां"
-                            else -> "Quick Actions & Checklists"
-                        },
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
+                SectionHeader(
+                    emoji = "⚡",
+                    title = when (language) {
+                        "mr" -> "जलद मार्गदर्शिका"
+                        "hi" -> "त्वरित मार्गदर्शिका"
+                        else -> "Quick Actions"
+                    }
+                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -404,29 +283,17 @@ fun HomeScreen(
 
             // Daily Gentle Cultural & Practical Tip
             item {
-                Card(
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                Surface(
+                    shape = RoundedCornerShape(24.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    shadowElevation = 2.dp,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
                         modifier = Modifier.padding(18.dp),
                         verticalAlignment = Alignment.Top
                     ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = KesariyaSaffron.copy(alpha = 0.12f),
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text(text = "💡", fontSize = 20.sp)
-                            }
-                        }
-
+                        EmojiWell(emoji = "💡", tint = KesariyaSaffron, size = 44.dp, emojiSize = 20)
                         Spacer(modifier = Modifier.width(14.dp))
 
                         Column {
@@ -467,26 +334,17 @@ private fun HomeActionCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    Surface(
+        shape = RoundedCornerShape(22.dp),
+        color = MaterialTheme.colorScheme.surface,
+        shadowElevation = 2.dp,
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(22.dp))
             .clickable(onClick = onClick)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Box(
-                modifier = Modifier
-                    .size(46.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(accentColor.copy(alpha = 0.12f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = icon, fontSize = 24.sp)
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+            EmojiWell(emoji = icon, tint = accentColor, size = 48.dp, emojiSize = 24)
+            Spacer(modifier = Modifier.height(14.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
@@ -504,3 +362,4 @@ private fun HomeActionCard(
         }
     }
 }
+

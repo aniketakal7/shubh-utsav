@@ -85,6 +85,7 @@ fun ShoppingScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             val topBarTitle = when (language) {
                 "mr" -> "${festival.getName(language)} साहित्य"
@@ -131,11 +132,10 @@ fun ShoppingScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Progress Header Card
-            Card(
-                shape = RoundedCornerShape(22.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 3.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {

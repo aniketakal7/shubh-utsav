@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.FestivalRepository
 import com.shubhutsav.app.ui.components.AdBannerMockup
+import com.shubhutsav.app.ui.components.AppBottomNav
+import com.shubhutsav.app.ui.components.AppDest
 import com.shubhutsav.app.ui.components.FestivalRowCard
 import com.shubhutsav.app.ui.components.LanguageSegmentItem
 import com.shubhutsav.app.ui.components.PremiumUpgradeDialog
@@ -203,87 +205,15 @@ fun CalendarScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         bottomBar = {
-            Surface(
-                tonalElevation = 8.dp,
-                shadowElevation = 8.dp,
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 0.dp
-                ) {
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("home") },
-                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "मुख्य"
-                                    "hi" -> "मुख्य"
-                                    else -> "Home"
-                                },
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = true,
-                        onClick = { /* Already on Calendar */ },
-                        icon = { Icon(Icons.Default.CalendarMonth, contentDescription = "Calendar") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "कॅलेंडर"
-                                    "hi" -> "कैलेंडर"
-                                    else -> "Calendar"
-                                },
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("settings") },
-                        icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "सेटिंग्ज"
-                                    "hi" -> "सेटिंग्स"
-                                    else -> "Settings"
-                                },
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                }
-            }
+            AppBottomNav(
+                selected = AppDest.Calendar,
+                language = language,
+                onHome = { navController.navigate("home") },
+                onCalendar = {},
+                onSettings = { navController.navigate("settings") }
+            )
         }
     ) { padding ->
         Box(
@@ -541,12 +471,12 @@ fun CalendarScreen(
                                             }
                                         },
                                         singleLine = true,
-                                        shape = RoundedCornerShape(20.dp),
+                                        shape = RoundedCornerShape(22.dp),
                                         colors = OutlinedTextFieldDefaults.colors(
                                             focusedContainerColor = MaterialTheme.colorScheme.surface,
                                             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                                             focusedBorderColor = KesariyaSaffron,
-                                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                                            unfocusedBorderColor = Color.Transparent
                                         ),
                                         modifier = Modifier
                                             .fillMaxWidth()

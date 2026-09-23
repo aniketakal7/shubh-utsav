@@ -20,6 +20,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -49,17 +50,35 @@ fun PanchangCard(
     val panchang = remember(city) { PanchangCalculator.calculateForDate(city = city) }
     var isExpanded by remember { mutableStateOf(false) }
 
-    Card(
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = RoyalMaroon),
-        border = BorderStroke(1.dp, Color(0xFF8A3043).copy(alpha = 0.5f)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+    Surface(
+        shape = RoundedCornerShape(28.dp),
+        color = RoyalMaroon,
+        shadowElevation = 12.dp,
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(
+        Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .background(PanchangCardGradient)
-                .padding(20.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(180.dp)
+                    .align(Alignment.TopEnd)
+                    .offset(x = 40.dp, y = (-50).dp)
+                    .clip(CircleShape)
+                    .background(Color(0x33FFD54F))
+            )
+            Box(
+                modifier = Modifier
+                    .size(110.dp)
+                    .align(Alignment.BottomStart)
+                    .offset(x = (-30).dp, y = 30.dp)
+                    .clip(CircleShape)
+                    .background(Color(0x22FF8A50))
+            )
+        Column(
+            modifier = Modifier.padding(20.dp)
         ) {
             // Header: Date, Sacred Title & City
             Row(
@@ -407,6 +426,7 @@ fun PanchangCard(
                     modifier = Modifier.size(18.dp)
                 )
             }
+        }
         }
     }
 }

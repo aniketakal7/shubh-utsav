@@ -35,7 +35,7 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = RoyalMaroon,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFFBECEB),
+    primaryContainer = Color(0xFFF8E8E8),
     onPrimaryContainer = RoyalMaroonDark,
     secondary = KesariyaSaffron,
     onSecondary = Color.White,
@@ -67,6 +67,7 @@ fun ShubhUtsavTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = ShubhUtsavTypography,
+        shapes = ShubhUtsavShapes,
         content = content
     )
 }

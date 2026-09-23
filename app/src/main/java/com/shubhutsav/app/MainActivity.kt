@@ -3,6 +3,7 @@ package com.shubhutsav.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -34,6 +35,7 @@ class MainActivity : ComponentActivity() {
         // Initialize Firebase services (Analytics, Crashlytics, Messaging topics)
         FirebaseInitHelper.init(this)
 
+        enableEdgeToEdge()
         setContent {
             ShubhUtsavApp()
         }
@@ -87,7 +89,10 @@ fun ShubhUtsavApp() {
     val navController = rememberNavController()
 
     ShubhUtsavTheme(darkTheme = isDark) {
-        Surface(modifier = Modifier.fillMaxSize()) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = androidx.compose.material3.MaterialTheme.colorScheme.background
+        ) {
             val startDestination = if (prefs.isOnboarded) "home" else "onboarding"
 
             NavHost(

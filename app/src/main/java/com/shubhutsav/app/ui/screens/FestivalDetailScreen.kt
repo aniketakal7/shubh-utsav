@@ -93,6 +93,7 @@ fun FestivalDetailScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             AppTopBar(
                 title = festival.getName(language),
@@ -112,12 +113,14 @@ fun FestivalDetailScreen(
             ) {
                 Button(
                     onClick = { navController.navigate("shopping/${festival.id}") },
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 12.dp)
-                        .height(52.dp)
+                        .padding(horizontal = 20.dp, vertical = 10.dp)
+                        .navigationBarsPadding()
+                        .height(54.dp)
                 ) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = null)
                     Spacer(modifier = Modifier.width(10.dp))
@@ -145,11 +148,10 @@ fun FestivalDetailScreen(
             // Hero Banner: Emoji medallion, Date, Category & Summary
             item {
                 Spacer(modifier = Modifier.height(4.dp))
-                Card(
-                    shape = RoundedCornerShape(22.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                Surface(
+                    shape = RoundedCornerShape(26.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    shadowElevation = 3.dp,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(18.dp)) {
@@ -213,11 +215,10 @@ fun FestivalDetailScreen(
 
             // Auspicious Muhurat Highlight Showcase Card
             item {
-                Card(
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = RoyalMaroon),
-                    border = BorderStroke(1.dp, Color(0xFF8A3043).copy(alpha = 0.5f)),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                Surface(
+                    shape = RoundedCornerShape(26.dp),
+                    color = RoyalMaroon,
+                    shadowElevation = 10.dp,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(

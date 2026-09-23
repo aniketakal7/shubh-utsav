@@ -31,6 +31,8 @@ import com.shubhutsav.app.data.UpdateInfo
 import com.shubhutsav.app.data.UpdateManager
 import com.shubhutsav.app.notifications.NotificationHelper
 import com.shubhutsav.app.data.AuthManager
+import com.shubhutsav.app.ui.components.AppBottomNav
+import com.shubhutsav.app.ui.components.AppDest
 import com.shubhutsav.app.ui.components.AppTopBar
 import com.shubhutsav.app.ui.components.AuthDialog
 import com.shubhutsav.app.ui.components.CityPickerDialog
@@ -106,6 +108,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             AppTopBar(
                 title = when (language) {
@@ -121,86 +124,13 @@ fun SettingsScreen(
             )
         },
         bottomBar = {
-            Surface(
-                tonalElevation = 8.dp,
-                shadowElevation = 8.dp,
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 0.dp
-                ) {
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("home") },
-                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "मुख्य"
-                                    "hi" -> "मुख्य"
-                                    else -> "Home"
-                                },
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("calendar") },
-                        icon = { Icon(Icons.Default.CalendarMonth, contentDescription = "Calendar") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "कॅलेंडर"
-                                    "hi" -> "कैलेंडर"
-                                    else -> "Calendar"
-                                },
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = true,
-                        onClick = { /* Already in Settings */ },
-                        icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                        label = {
-                            Text(
-                                when (language) {
-                                    "mr" -> "सेटिंग्ज"
-                                    "hi" -> "सेटिंग्स"
-                                    else -> "Settings"
-                                },
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                }
-            }
+            AppBottomNav(
+                selected = AppDest.Settings,
+                language = language,
+                onHome = { navController.navigate("home") },
+                onCalendar = { navController.navigate("calendar") },
+                onSettings = {}
+            )
         }
     ) { padding ->
         Column(
