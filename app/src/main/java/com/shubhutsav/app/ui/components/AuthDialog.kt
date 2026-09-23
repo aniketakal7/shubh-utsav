@@ -409,7 +409,50 @@ fun AuthDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Sign in with Google button
+                OutlinedButton(
+                    onClick = {
+                        try {
+                            val webClientId = "459339792091-j5eclirqtqphh8v5mdgs3n3tidqov6b2.apps.googleusercontent.com"
+                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(webClientId)
+                                .requestEmail()
+                                .build()
+                            val client = GoogleSignIn.getClient(context, gso)
+                            googleSignInLauncher.launch(client.signInIntent)
+                        } catch (e: Exception) {
+                            errorMessage = e.localizedMessage ?: "Failed to launch Google sign-in"
+                        }
+                    },
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surface),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "🌐", fontSize = 16.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = when (language) {
+                                "mr" -> "Google सह पुढे जा"
+                                "hi" -> "Google से साइन इन करें"
+                                else -> "Sign in with Google"
+                            },
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Guest / Anonymous button
                 OutlinedButton(

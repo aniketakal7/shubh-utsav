@@ -12,7 +12,20 @@
           "package_name": "com.shubhutsav.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "459339792091-84e7b63nmdroscqk3piqguuop7jmhho2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shubhutsav.app",
+            "certificate_hash": "a281b05469bf5a83c955f25db032bb27827a91bb"
+          }
+        },
+        {
+          "client_id": "459339792091-j5eclirqtqphh8v5mdgs3n3tidqov6b2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCweYf0OVUMDZ3-WfxA4nh7pDIJlWpM-os"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459339792091-j5eclirqtqphh8v5mdgs3n3tidqov6b2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
