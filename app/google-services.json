@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "459339792091",
+    "project_id": "shubh-utsav",
+    "storage_bucket": "shubh-utsav.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459339792091:android:2f97aece63e5f3c94b16fe",
+        "android_client_info": {
+          "package_name": "com.shubhutsav.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCweYf0OVUMDZ3-WfxA4nh7pDIJlWpM-os"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

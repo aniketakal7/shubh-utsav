@@ -18,6 +18,7 @@ import com.shubhutsav.app.data.PreferencesManager
 import com.shubhutsav.app.data.UpdateCheckResult
 import com.shubhutsav.app.data.UpdateInfo
 import com.shubhutsav.app.data.UpdateManager
+import com.shubhutsav.app.data.FirebaseInitHelper
 import com.shubhutsav.app.notifications.NotificationHelper
 import com.shubhutsav.app.ui.components.AppUpdateDialog
 import com.shubhutsav.app.ui.screens.*
@@ -29,6 +30,9 @@ class MainActivity : ComponentActivity() {
 
         // Initialize high importance notification channels
         NotificationHelper.createNotificationChannel(this)
+
+        // Initialize Firebase services (Analytics, Crashlytics, Messaging topics)
+        FirebaseInitHelper.init(this)
 
         setContent {
             ShubhUtsavApp()
