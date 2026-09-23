@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 2,
-  "latestVersionName": "1.2.0",
+  "latestVersionCode": 3,
+  "latestVersionName": "1.2.1",
   "minSupportedVersionCode": 1,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.2.0 Available! 🎉",
-    "hi": "शुभ उत्सव 1.2.0 उपलब्ध है! 🎉",
-    "mr": "शुभ उत्सव १.२.० नवीन अपडेट उपलब्ध आहे! 🎉"
+    "en": "Shubh Utsav 1.2.1 Available! 🎉",
+    "hi": "शुभ उत्सव 1.2.1 उपलब्ध है! 🎉",
+    "mr": "शुभ उत्सव १.२.१ नवीन अपडेट उपलब्ध आहे! 🎉"
   },
   "releaseNotes": {
-    "en": "• Clean & refined Settings screen\n• Performance optimizations & smooth animations\n• Accurate Vedic Panchang & Festival Muhurats",
-    "hi": "• सेटिंग्स और ऐप इंटरफ़ेस को और बेहतर बनाया गया\n• ऐप की गति और एनिमेशन में सुधार\n• सटीक वैदिक मुहूर्त और दैनिक पंचांग",
-    "mr": "• सेटिंग्स व ॲप अनुभव अधिक स्वच्छ व सुंदर\n• वेगवान कार्यक्षमता आणि अचूक वैदिक पंचांग\n• नवीन सण व पूजेची अचूक माहिती"
+    "en": "• Fixed Tithi calculation (accurate Udaya Tithi)\n• High-precision NOAA solar calculations for Sunrise, Sunset & Rahu Kaal\n• Accurate Lahiri Ayanamsha for Nakshatra & Yoga\n• Separated Amrit Kaal from Rahu Kaal",
+    "hi": "• सटीक उदय तिथि और पंचांग गणना\n• सटीक सूर्योदय, सूर्यास्त और राहु काल मुहूर्त\n• नक्षत्र व योग के लिए शुद्ध वैदिक गणना\n• अमृत काल मुहूर्त में सुधार",
+    "mr": "• अचूक उदय तिथी व दैनिक पंचांग गणना\n• सूर्योदय, सूर्यास्त व राहु कालची अचूक वेळ\n• नक्षत्र व योग अचूक वैदिक गणना\n• अमृत काल सुधारणा"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.2.0",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.2.0/app-release.apk",
-  "publishedDate": "2026-09-22"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.2.1",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.2.1/app-release.apk",
+  "publishedDate": "2026-09-23"
 }

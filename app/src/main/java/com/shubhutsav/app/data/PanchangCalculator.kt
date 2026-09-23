@@ -1,7 +1,6 @@
 package com.shubhutsav.app.data
 
 import java.util.Calendar
-import java.util.TimeZone
 import kotlin.math.*
 
 data class PanchangDay(
@@ -96,51 +95,128 @@ object PanchangCalculator {
         "शकुनि", "चतुष्पाद", "नाग", "किंस्तुघ्न"
     )
 
-    private val monthsEn = listOf("Chaitra", "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada", "Ashwin", "Kartik", "Margashirsha", "Pausha", "Magha", "Phalguna")
-    private val monthsHi = listOf("चैत्र", "वैशाख", "ज्येष्ठ", "आषाढ़", "श्रावण", "भाद्रपद", "अश्विन", "कार्तिक", "मार्गशीर्ष", "पौष", "माघ", "फाल्गुन")
+    private val monthsEn = listOf(
+        "Chaitra", "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada",
+        "Ashwin", "Kartik", "Margashirsha", "Pausha", "Magha", "Phalguna"
+    )
+
+    private val monthsHi = listOf(
+        "चैत्र", "वैशाख", "ज्येष्ठ", "आषाढ़", "श्रावण", "भाद्रपद",
+        "अश्विन", "कार्तिक", "मार्गशीर्ष", "पौष", "माघ", "फाल्गुन"
+    )
 
     private val weekdaysEn = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
     private val weekdaysHi = listOf("रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार")
 
+    /**
+     * Calculates accurate Vedic Panchang, Sunrise, Sunset, and Muhurta timings
+     * using NOAA solar equations and Meeus lunar perturbation algorithms.
+     */
     fun calculateForDate(calendar: Calendar = Calendar.getInstance(), city: City): PanchangDay {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH) + 1 // 1..12
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // 1=Sun .. 7=Sat
-        val dayOfYear = calendar.get(Calendar.DAY_OF_YEAR)
 
-        // Julian Day calculation
-        val a = (14 - month) / 12
-        val y = year + 4800 - a
-        val m = month + 12 * a - 3
-        val jd = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045.0 + 0.5
+        // 1. Julian Day at 00:00 UT (Greenwich Midnight)
+        val y = if (month <= 2) year - 1 else year
+        val m = if (month <= 2) month + 12 else month
+        val a = y / 100
+        val b = 2 - a + a / 4
+        val jd0 = (365.25 * (y + 4716)).toLong() + (30.6001 * (m + 1)).toInt() + day + b - 1524.5
 
-        // Approximate Sun and Moon longitudes (ecliptic degrees)
-        val n = jd - 2451545.0
-        val L0 = (280.460 + 0.9856474 * n) % 360.0 // Sun mean longitude
-        val g = Math.toRadians((357.528 + 0.9856003 * n) % 360.0) // Sun mean anomaly
-        val sunLon = (L0 + 1.915 * sin(g) + 0.020 * sin(2 * g) + 360.0) % 360.0
+        // 2. High-Precision Solar Position & NOAA Equation of Time (EoT)
+        val t0 = (jd0 - 2451545.0) / 36525.0
+        var l0 = (280.46646 + t0 * (36000.76983 + 0.0003032 * t0)) % 360.0
+        if (l0 < 0) l0 += 360.0
 
-        // Moon mean longitude and anomaly
-        val moonMean = (218.316 + 13.176396 * n) % 360.0
-        val moonAnomaly = Math.toRadians((134.963 + 13.064993 * n) % 360.0)
-        val moonLon = (moonMean + 6.289 * sin(moonAnomaly) + 360.0) % 360.0
+        var mSun = (357.52911 + t0 * (35999.05029 - 0.0001537 * t0)) % 360.0
+        if (mSun < 0) mSun += 360.0
+        val mSunRad = Math.toRadians(mSun)
 
-        // Tithi: Angular difference divided by 12 degrees
-        var diff = moonLon - sunLon
+        val centerEq = (1.914602 - t0 * (0.004817 + 0.000014 * t0)) * sin(mSunRad) +
+                (0.019993 - 0.000101 * t0) * sin(2 * mSunRad) +
+                0.000289 * sin(3 * mSunRad)
+        var sunTrueLon = (l0 + centerEq) % 360.0
+        if (sunTrueLon < 0) sunTrueLon += 360.0
+
+        val eps0 = 23.4392911 - t0 * (46.8150 / 3600.0)
+        val epsRad = Math.toRadians(eps0)
+
+        val sinDec = sin(epsRad) * sin(Math.toRadians(sunTrueLon))
+        val decRad = asin(sinDec.coerceIn(-1.0, 1.0))
+
+        val yTan = tan(epsRad / 2.0).pow(2)
+        val l0Rad = Math.toRadians(l0)
+        val eotMinutes = 4.0 * Math.toDegrees(
+            yTan * sin(2 * l0Rad) - 2 * 0.016708634 * sin(mSunRad) +
+            4 * 0.016708634 * yTan * sin(mSunRad) * cos(2 * l0Rad) -
+            0.5 * yTan.pow(2) * sin(4 * l0Rad) -
+            1.25 * (0.016708634).pow(2) * sin(2 * mSunRad)
+        )
+
+        // 3. Precise Local Sunrise and Sunset (IST)
+        val standardMeridian = 82.5 // Indian Standard Time (IST) meridian (UTC+5.5)
+        val solarNoonMinutes = 720.0 + (standardMeridian - city.longitude) * 4.0 - eotMinutes
+
+        val latRad = Math.toRadians(city.latitude)
+        // Standard zenith for sunrise/sunset is 90.8333° (atmospheric refraction 34' + solar semidiameter 16')
+        val cosH = (cos(Math.toRadians(90.8333)) - sin(latRad) * sin(decRad)) / (cos(latRad) * cos(decRad))
+        val hourAngle = when {
+            cosH >= 1.0 -> 0.0
+            cosH <= -1.0 -> 180.0
+            else -> Math.toDegrees(acos(cosH))
+        }
+        val halfDayMinutes = (hourAngle / 15.0) * 60.0
+
+        val sunriseMinutes = (solarNoonMinutes - halfDayMinutes).roundToInt()
+        val sunsetMinutes = (solarNoonMinutes + halfDayMinutes).roundToInt()
+
+        val sunriseStr = formatTimeFromMinutes(sunriseMinutes)
+        val sunsetStr = formatTimeFromMinutes(sunsetMinutes)
+
+        // 4. Udaya Tithi & Celestial Longitudes at Local Sunrise
+        // Convert sunrise IST minutes to UTC hours
+        val sunriseUtcMinutes = sunriseMinutes - 330.0
+        val jdSunrise = jd0 + (sunriseUtcMinutes / 1440.0)
+        val tSunrise = (jdSunrise - 2451545.0) / 36525.0
+        val nSunrise = jdSunrise - 2451545.0
+
+        // Sun longitude at sunrise
+        var l0Sr = (280.46646 + 0.9856474 * nSunrise) % 360.0
+        if (l0Sr < 0) l0Sr += 360.0
+        val gSr = Math.toRadians((357.52911 + 0.9856003 * nSunrise) % 360.0)
+        var sunLonSr = (l0Sr + 1.9146 * sin(gSr) + 0.020 * sin(2 * gSr)) % 360.0
+        if (sunLonSr < 0) sunLonSr += 360.0
+
+        // Moon longitude with major lunar perturbation terms (Meeus Ch. 47)
+        val lMoon = (218.3164477 + 481267.88123421 * tSunrise) % 360.0
+        val dMoon = (297.8501921 + 445267.1114034 * tSunrise) % 360.0
+        val mSunSr = (357.5291092 + 35999.0502909 * tSunrise) % 360.0
+        val mMoonSr = (134.9633964 + 477198.8675055 * tSunrise) % 360.0
+        val fMoon = (93.2720950 + 483202.0175233 * tSunrise) % 360.0
+
+        val dRad = Math.toRadians(dMoon)
+        val mSunRadSr = Math.toRadians(mSunSr)
+        val mMoonRadSr = Math.toRadians(mMoonSr)
+        val fRad = Math.toRadians(fMoon)
+
+        var moonLonSr = lMoon + 6.288774 * sin(mMoonRadSr) +
+                1.274027 * sin(2 * dRad - mMoonRadSr) +
+                0.658309 * sin(2 * dRad) +
+                0.213618 * sin(2 * mMoonRadSr) -
+                0.185116 * sin(mSunRadSr) -
+                0.114332 * sin(2 * fRad)
+        moonLonSr = (moonLonSr % 360.0 + 360.0) % 360.0
+
+        // Tithi: Angular difference (Moon - Sun)
+        var diff = (moonLonSr - sunLonSr) % 360.0
         if (diff < 0) diff += 360.0
         val tithiIndex = ((diff / 12.0).toInt() % 30).coerceIn(0, 29)
         val isShukla = tithiIndex < 15
 
-        // Nakshatra: Moon longitude divided by 13.33333 degrees
-        val nakshatraIndex = ((moonLon / (360.0 / 27.0)).toInt() % 27).coerceIn(0, 26)
-
-        // Yoga: (Sun + Moon) divided by 13.33333 degrees
-        val sumLon = (sunLon + moonLon) % 360.0
-        val yogaIndex = ((sumLon / (360.0 / 27.0)).toInt() % 27).coerceIn(0, 26)
-
         // Karana: Half-tithi
-        val karanaNum = (diff / 6.0).toInt()
+        val karanaNum = (diff / 6.0).toInt().coerceIn(0, 59)
         val karanaIndex = if (karanaNum == 0) 10 // Kimstughna
         else if (karanaNum >= 57) {
             when (karanaNum) {
@@ -152,33 +228,27 @@ object PanchangCalculator {
             (karanaNum - 1) % 7 // Bava..Vishti
         }.coerceIn(0, 10)
 
+        // 5. Lahiri Ayanamsha (Chitra Paksha) for Nirayana Sidereal Calculations
+        val ayanamsha = 23.856 + (jdSunrise - 2451545.0) / 365.25 * (50.29 / 3600.0)
+        val moonSidereal = (moonLonSr - ayanamsha + 360.0) % 360.0
+        val sunSidereal = (sunLonSr - ayanamsha + 360.0) % 360.0
+
+        // Nakshatra: Moon's sidereal position divided by 13° 20' (13.33333°)
+        val nakshatraIndex = ((moonSidereal / (360.0 / 27.0)).toInt() % 27).coerceIn(0, 26)
+
+        // Yoga: (Sidereal Sun + Sidereal Moon) divided by 13° 20'
+        val yogaIndex = ((((sunSidereal + moonSidereal) % 360.0) / (360.0 / 27.0)).toInt() % 27).coerceIn(0, 26)
+
         // Hindu Month & Samvat
         val hinduMonthIdx = ((month + 8) % 12)
         val samvatYear = year + 57
 
-        // Sunrise & Sunset calculation based on latitude & longitude
-        val sunDeclination = 23.45 * sin(Math.toRadians((360.0 / 365.0) * (dayOfYear - 81)))
-        val latRad = Math.toRadians(city.latitude)
-        val decRad = Math.toRadians(sunDeclination)
+        // 6. Muhurta Calculations
+        val dayDuration = sunsetMinutes - sunriseMinutes
+        val partDuration = dayDuration / 8.0
 
-        // Hour angle at horizon (zenith = 90.833 deg)
-        val cosH = (cos(Math.toRadians(90.833)) - sin(latRad) * sin(decRad)) / (cos(latRad) * cos(decRad))
-        val hourAngle = Math.toDegrees(acos(cosH.coerceIn(-1.0, 1.0)))
-
-        // Solar noon in hours (UTC+5.5)
-        val standardMeridian = 82.5 // Indian Standard Time (IST) meridian
-        val timeCorrectionMinutes = (standardMeridian - city.longitude) * 4.0 // 4 mins per degree
-        val solarNoonMinutes = 12 * 60 + timeCorrectionMinutes
-        val halfDayMinutes = (hourAngle / 15.0) * 60.0
-
-        val sunriseMinutes = (solarNoonMinutes - halfDayMinutes).toInt()
-        val sunsetMinutes = (solarNoonMinutes + halfDayMinutes).toInt()
-
-        val sunriseStr = formatTimeFromMinutes(sunriseMinutes)
-        val sunsetStr = formatTimeFromMinutes(sunsetMinutes)
-
-        // Rahu Kaal calculation (1/8th of daytime based on weekday)
-        // 1=Sun(8), 2=Mon(2), 3=Tue(7), 4=Wed(5), 5=Thu(6), 6=Fri(4), 7=Sat(3)
+        // Rahu Kaal: 1/8th of daytime based on weekday
+        // Sun(8), Mon(2), Tue(7), Wed(5), Thu(6), Fri(4), Sat(3)
         val rahuPart = when (dayOfWeek) {
             Calendar.SUNDAY -> 8
             Calendar.MONDAY -> 2
@@ -188,25 +258,34 @@ object PanchangCalculator {
             Calendar.FRIDAY -> 4
             else -> 3
         }
-        val dayDuration = sunsetMinutes - sunriseMinutes
-        val partDuration = dayDuration / 8.0
-        val rahuStart = (sunriseMinutes + (rahuPart - 1) * partDuration).toInt()
-        val rahuEnd = (sunriseMinutes + rahuPart * partDuration).toInt()
+        val rahuStart = (sunriseMinutes + (rahuPart - 1) * partDuration).roundToInt()
+        val rahuEnd = (sunriseMinutes + rahuPart * partDuration).roundToInt()
         val rahuKaalStr = "${formatTimeFromMinutes(rahuStart)} – ${formatTimeFromMinutes(rahuEnd)}"
 
-        // Abhijit Muhurat: Midday period (approx 24 min before and after solar noon)
-        val abhijitStart = (solarNoonMinutes - 24).toInt()
-        val abhijitEnd = (solarNoonMinutes + 24).toInt()
+        // Abhijit Muhurat: 8th Muhurat of the day (15 Muhurats during daytime), centered on Solar Noon
+        val muhuratDuration = dayDuration / 15.0
+        val abhijitStart = (solarNoonMinutes - muhuratDuration / 2.0).roundToInt()
+        val abhijitEnd = (solarNoonMinutes + muhuratDuration / 2.0).roundToInt()
         val abhijitStr = "${formatTimeFromMinutes(abhijitStart)} – ${formatTimeFromMinutes(abhijitEnd)}"
 
-        // Brahma Muhurat: 96 to 48 minutes before sunrise
+        // Brahma Muhurat: 2 Muhurats (96 min to 48 min) before Sunrise
         val brahmaStart = sunriseMinutes - 96
         val brahmaEnd = sunriseMinutes - 48
         val brahmaStr = "${formatTimeFromMinutes(brahmaStart)} – ${formatTimeFromMinutes(brahmaEnd)}"
 
-        // Amrit Kaal (approximate auspicious window)
-        val amritStart = (sunriseMinutes + 4 * partDuration).toInt()
-        val amritEnd = (sunriseMinutes + 5 * partDuration).toInt()
+        // Amrit Kaal: Daytime auspicious Choghadiya window (never coincides with Rahu Kaal)
+        // Amrit Choghadiya segment from sunrise: Sun(4), Mon(1), Tue(5), Wed(2), Thu(7), Fri(3), Sat(7)
+        val amritPart = when (dayOfWeek) {
+            Calendar.SUNDAY -> 4
+            Calendar.MONDAY -> 1
+            Calendar.TUESDAY -> 5
+            Calendar.WEDNESDAY -> 2
+            Calendar.THURSDAY -> 7
+            Calendar.FRIDAY -> 3
+            else -> 7
+        }
+        val amritStart = (sunriseMinutes + (amritPart - 1) * partDuration).roundToInt()
+        val amritEnd = (sunriseMinutes + amritPart * partDuration).roundToInt()
         val amritStr = "${formatTimeFromMinutes(amritStart)} – ${formatTimeFromMinutes(amritEnd)}"
 
         val gregorianEn = "$day ${getEnglishMonthName(month)} $year"
