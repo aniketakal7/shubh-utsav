@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 3,
-  "latestVersionName": "1.2.1",
+  "latestVersionCode": 4,
+  "latestVersionName": "1.2.2",
   "minSupportedVersionCode": 1,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.2.1 Available! 🎉",
-    "hi": "शुभ उत्सव 1.2.1 उपलब्ध है! 🎉",
-    "mr": "शुभ उत्सव १.२.१ नवीन अपडेट उपलब्ध आहे! 🎉"
+    "en": "Shubh Utsav 1.2.2 Available! 🎉",
+    "hi": "शुभ उत्सव 1.2.2 उपलब्ध है! 🎉",
+    "mr": "शुभ उत्सव १.२.२ नवीन अपडेट उपलब्ध आहे! 🎉"
   },
   "releaseNotes": {
-    "en": "• Fixed Tithi calculation (accurate Udaya Tithi)\n• High-precision NOAA solar calculations for Sunrise, Sunset & Rahu Kaal\n• Accurate Lahiri Ayanamsha for Nakshatra & Yoga\n• Separated Amrit Kaal from Rahu Kaal",
-    "hi": "• सटीक उदय तिथि और पंचांग गणना\n• सटीक सूर्योदय, सूर्यास्त और राहु काल मुहूर्त\n• नक्षत्र व योग के लिए शुद्ध वैदिक गणना\n• अमृत काल मुहूर्त में सुधार",
-    "mr": "• अचूक उदय तिथी व दैनिक पंचांग गणना\n• सूर्योदय, सूर्यास्त व राहु कालची अचूक वेळ\n• नक्षत्र व योग अचूक वैदिक गणना\n• अमृत काल सुधारणा"
+    "en": "• Fixed Tithi calculation (accurate Udaya Tithi)\n• High-precision NOAA solar calculations for Sunrise, Sunset & Rahu Kaal\n• Firebase Authentication (Google Sign-In, Email/Password & Guest login)\n• Push Notifications & Cloud Sync",
+    "hi": "• सटीक उदय तिथि और पंचांग गणना\n• सटीक सूर्योदय, सूर्यास्त और राहु काल मुहूर्त\n• गूगल लॉगिन और ईमेल ऑथेंटिकेशन\n• क्लाउड सिंक और नोटिफिकेशन",
+    "mr": "• अचूक उदय तिथी व दैनिक पंचांग गणना\n• सूर्योदय, सूर्यास्त व राहु कालची अचूक वेळ\n• गुगल लॉगिन आणि खाती व्यवस्थापन\n• क्लाउड सिंक आणि सण सूचना"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.2.1",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.2.1/app-release.apk",
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.2.2",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.2.2/app-release.apk",
   "publishedDate": "2026-09-23"
 }
