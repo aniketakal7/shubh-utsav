@@ -1,6 +1,7 @@
 package com.shubhutsav.app.ui.screens
 
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -927,6 +928,91 @@ fun SettingsScreen(
                             )
                         }
                     }
+                }
+            }
+
+            // Developer Credit Card — "Made by Aniket Akal"
+            Card(
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = RoyalMaroon.copy(alpha = 0.08f)
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    VedicGold.copy(alpha = 0.4f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = when (language) {
+                            "mr" -> "❤\uFE0F ने बनवले"
+                            "hi" -> "❤\uFE0F से बनाया"
+                            else -> "Crafted with ❤\uFE0F by"
+                        },
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Aniket Akal",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = RoyalMaroon
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = when (language) {
+                            "mr" -> "विकासक आणि निर्माता"
+                            "hi" -> "डेवलपर एवं निर्माता"
+                            else -> "Developer & Creator"
+                        },
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Button(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr_aniket_akal/"))
+                            context.startActivity(intent)
+                        },
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFE1306C)
+                        ),
+                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)
+                    ) {
+                        Text(
+                            text = "📸  @mr_aniket_akal",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = when (language) {
+                            "mr" -> "इंस्टाग्रामवर फॉलो करा 🙏"
+                            "hi" -> "इंस्टाग्राम पर फॉलो करें 🙏"
+                            else -> "Follow on Instagram 🙏"
+                        },
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 
