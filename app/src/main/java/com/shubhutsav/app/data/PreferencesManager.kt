@@ -25,6 +25,60 @@ class PreferencesManager(context: Context) {
         get() = prefs.getString("city_id", "delhi") ?: "delhi"
         set(value) = prefs.edit().putString("city_id", value).apply()
 
+    fun getSelectedLocation(): City {
+        val isCustomVillage = prefs.getBoolean("is_custom_village", false)
+        if (isCustomVillage) {
+            val id = prefs.getString("village_id", "custom_village") ?: "custom_village"
+            val name = prefs.getString("village_name", "") ?: ""
+            val hindiName = prefs.getString("village_hindi_name", name) ?: name
+            val state = prefs.getString("village_state", "Maharashtra") ?: "Maharashtra"
+            val hindiState = prefs.getString("village_hindi_state", state) ?: state
+            val district = prefs.getString("village_district", null)
+            val hindiDistrict = prefs.getString("village_hindi_district", district)
+            val latBits = prefs.getLong("village_lat_bits", java.lang.Double.doubleToLongBits(19.0760))
+            val lonBits = prefs.getLong("village_lon_bits", java.lang.Double.doubleToLongBits(72.8777))
+            val lat = java.lang.Double.longBitsToDouble(latBits)
+            val lon = java.lang.Double.longBitsToDouble(lonBits)
+
+            if (name.isNotBlank()) {
+                return City(
+                    id = id,
+                    name = name,
+                    hindiName = hindiName,
+                    state = state,
+                    hindiState = hindiState,
+                    latitude = lat,
+                    longitude = lon,
+                    isVillage = true,
+                    district = district,
+                    hindiDistrict = hindiDistrict
+                )
+            }
+        }
+        return CityRepository.getCityById(cityId)
+    }
+
+    fun saveSelectedLocation(city: City) {
+        val editor = prefs.edit()
+        if (city.isVillage) {
+            editor.putBoolean("is_custom_village", true)
+            editor.putString("village_id", city.id)
+            editor.putString("village_name", city.name)
+            editor.putString("village_hindi_name", city.hindiName)
+            editor.putString("village_state", city.state)
+            editor.putString("village_hindi_state", city.hindiState)
+            editor.putString("village_district", city.district)
+            editor.putString("village_hindi_district", city.hindiDistrict)
+            editor.putLong("village_lat_bits", java.lang.Double.doubleToLongBits(city.latitude))
+            editor.putLong("village_lon_bits", java.lang.Double.doubleToLongBits(city.longitude))
+            editor.putString("city_id", city.id)
+        } else {
+            editor.putBoolean("is_custom_village", false)
+            editor.putString("city_id", city.id)
+        }
+        editor.apply()
+    }
+
     var ritualStyle: String
         get() = prefs.getString("ritual_style", "General") ?: "General"
         set(value) = prefs.edit().putString("ritual_style", value).apply()

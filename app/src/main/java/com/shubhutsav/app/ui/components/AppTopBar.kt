@@ -102,7 +102,7 @@ fun AppTopBar(
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.widthIn(max = 88.dp)
+                                modifier = Modifier.widthIn(max = 120.dp)
                             )
                         }
                     }

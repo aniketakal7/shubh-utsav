@@ -103,6 +103,14 @@ fun PanchangCard(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium
                     )
+                    if (city.isVillage) {
+                        Text(
+                            text = "📍 ${city.displayName(language)} (${city.displaySubtext(language)})",
+                            color = VedicGold,
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
 
                 // City badge with change action
@@ -127,13 +135,13 @@ fun PanchangCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = if (isHindi) city.hindiName else city.name,
+                            text = if (city.isVillage) "🏡 " + city.displayName(language) else city.displayName(language),
                             color = Color.White,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.widthIn(max = 88.dp)
+                            modifier = Modifier.widthIn(max = 115.dp)
                         )
                     }
                 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
@@ -41,6 +42,7 @@ import com.shubhutsav.app.ui.theme.RoyalMaroon
 @Composable
 fun CityPickerDialog(
     currentCityId: String,
+    currentCity: City? = null,
     isHindi: Boolean = false,
     language: String = if (isHindi) "hi" else "en",
     onCitySelected: (City) -> Unit,
@@ -50,30 +52,24 @@ fun CityPickerDialog(
     var searchQuery by remember { mutableStateOf("") }
     var isDetectingLocation by remember { mutableStateOf(false) }
     var showGpsPromptDialog by remember { mutableStateOf(false) }
+    var showManualVillageDialog by remember { mutableStateOf(false) }
+
+    var isSearchingOnline by remember { mutableStateOf(false) }
+    var onlineVillageResults by remember { mutableStateOf<List<City>>(emptyList()) }
 
     fun processLocationDetection() {
         isDetectingLocation = true
-        LocationHelper.detectNearestCity(context) { result ->
+        LocationHelper.detectExactLocation(context, language) { result ->
             isDetectingLocation = false
             when (result) {
                 is LocationResult.Success -> {
                     val detected = result.detectedLocation
+                    val vName = detected.villageName ?: detected.city.displayName(language)
+                    val distName = detected.district
                     val toastMsg = when (language) {
-                        "mr" -> {
-                            val place = detected.detectedPlaceName?.let { "$it (जवळचे शहर: " } ?: ""
-                            val suffix = if (detected.detectedPlaceName != null) ")" else ""
-                            "स्थान ओळखले: $place${detected.city.name}$suffix, अंतर: ${detected.distanceKm} किमी"
-                        }
-                        "hi" -> {
-                            val place = detected.detectedPlaceName?.let { "$it (निकटतम शहर: " } ?: ""
-                            val suffix = if (detected.detectedPlaceName != null) ")" else ""
-                            "स्थान पहचाना गया: $place${detected.city.hindiName}$suffix, दूरी: ${detected.distanceKm} किमी"
-                        }
-                        else -> {
-                            val place = detected.detectedPlaceName?.let { "$it (Nearest: " } ?: ""
-                            val suffix = if (detected.detectedPlaceName != null) ")" else ""
-                            "Location detected: $place${detected.city.name}$suffix (${detected.distanceKm} km away)"
-                        }
+                        "mr" -> "अचूक गाव ओळखले: $vName${if (distName != null) " ($distName)" else ""} 🏡"
+                        "hi" -> "सटीक गाँव पहचाना गया: $vName${if (distName != null) " ($distName)" else ""} 🏡"
+                        else -> "Exact Village Detected: $vName${if (distName != null) " ($distName)" else ""} 🏡"
                     }
                     Toast.makeText(context, toastMsg, Toast.LENGTH_LONG).show()
                     onCitySelected(detected.city)
@@ -92,8 +88,8 @@ fun CityPickerDialog(
                 }
                 is LocationResult.Error -> {
                     val errorMsg = when (language) {
-                        "mr" -> "स्थान शोधण्यात अडचण आली. कृपया सूचीमधून शहर निवडा."
-                        "hi" -> "स्थान खोजने में असमर्थ। कृपया सूची से शहर चुनें।"
+                        "mr" -> "स्थान शोधण्यात अडचण आली. कृपया सूचीमधून शहर निवडा किंवा गाव टाईप करा."
+                        "hi" -> "स्थान खोजने में असमर्थ। कृपया सूची से चुनें या गाँव टाइप करें।"
                         else -> "Could not detect GPS location. Please select manually."
                     }
                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
@@ -115,9 +111,9 @@ fun CityPickerDialog(
             }
         } else {
             val deniedMsg = when (language) {
-                "mr" -> "स्थान परवानगी नाकारली. कृपया सूचीमधून शहर निवडा."
-                "hi" -> "स्थान अनुमति अस्वीकृत। कृपया सूची से शहर चुनें।"
-                else -> "Location permission denied. Please select city manually."
+                "mr" -> "स्थान परवानगी नाकारली. कृपया सूचीमधून शहर निवडा किंवा गाव टाईप करा."
+                "hi" -> "स्थान अनुमति अस्वीकृत। कृपया सूची से चुनें या गाँव लिखें।"
+                else -> "Location permission denied. Please select city or village manually."
             }
             Toast.makeText(context, deniedMsg, Toast.LENGTH_SHORT).show()
         }
@@ -130,6 +126,15 @@ fun CityPickerDialog(
             showGpsPromptDialog = true
         } else {
             processLocationDetection()
+        }
+    }
+
+    fun searchOnlineVillage(query: String) {
+        if (query.isBlank()) return
+        isSearchingOnline = true
+        LocationHelper.searchVillages(context, query, language) { list ->
+            isSearchingOnline = false
+            onlineVillageResults = list
         }
     }
 
@@ -147,6 +152,7 @@ fun CityPickerDialog(
         }
     }
 
+    // GPS prompt dialog
     if (showGpsPromptDialog) {
         AlertDialog(
             onDismissRequest = { showGpsPromptDialog = false },
@@ -170,9 +176,9 @@ fun CityPickerDialog(
             text = {
                 Text(
                     text = when (language) {
-                        "mr" -> "आपोआप अचूक पंचांग आणि मुहूर्ताचे शहर निवडण्यासाठी कृपया आपल्या फोनचे GPS/स्थान चालू करा."
-                        "hi" -> "सटीक पंचांग और मुहूर्त का शहर स्वतः चुनने के लिए कृपया अपने फोन का GPS/स्थान चालू करें।"
-                        else -> "Please turn on GPS/Location in your device settings to automatically detect the closest Panchang city."
+                        "mr" -> "आपोआप अचूक गाव आणि पंचांग मुहूर्त शोधण्यासाठी कृपया आपल्या फोनचे GPS/स्थान चालू करा."
+                        "hi" -> "सटीक गाँव और पंचांग मुहूर्त स्वतः पहचानने हेतु कृपया अपने फोन का GPS/स्थान चालू करें।"
+                        else -> "Please turn on GPS/Location in device settings to automatically detect your exact village coordinates."
                     },
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -209,6 +215,19 @@ fun CityPickerDialog(
         )
     }
 
+    // Manual Village Entry Dialog
+    if (showManualVillageDialog) {
+        ManualVillageDialog(
+            language = language,
+            onDismiss = { showManualVillageDialog = false },
+            onVillageCreated = { newVillage ->
+                showManualVillageDialog = false
+                onCitySelected(newVillage)
+                onDismiss()
+            }
+        )
+    }
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(26.dp),
@@ -217,7 +236,7 @@ fun CityPickerDialog(
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.82f)
+                .fillMaxHeight(0.85f)
                 .padding(horizontal = 4.dp)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
@@ -240,9 +259,9 @@ fun CityPickerDialog(
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
                             text = when (language) {
-                                "mr" -> "आपले शहर निवडा"
-                                "hi" -> "अपना शहर चुनें"
-                                else -> "Select Your City"
+                                "mr" -> "आपले गाव किंवा शहर निवडा"
+                                "hi" -> "अपना गाँव या शहर चुनें"
+                                else -> "Select Village or City"
                             },
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.primary
@@ -258,17 +277,17 @@ fun CityPickerDialog(
 
                 Text(
                     text = when (language) {
-                        "mr" -> "अचूक सूर्योदय, सूर्यास्त आणि राहू काळ मुहूर्तासाठी शहर निवडा किंवा GPS वापरा:"
-                        "hi" -> "सटीक सूर्योदय, सूर्यास्त और राहु काल मुहूर्त हेतु शहर चुनें या GPS प्रयोग करें:"
-                        else -> "Panchang timings and Rahu Kaal will adjust to this location:"
+                        "mr" -> "अचूक सूर्योदय, सूर्यास्त आणि पंचांग मुहूर्तासाठी आपले गाव किंवा शहर निवडा:"
+                        "hi" -> "सटीक सूर्योदय, सूर्यास्त और पंचांग मुहूर्त हेतु अपना गाँव या शहर चुनें:"
+                        else -> "Panchang timings and Rahu Kaal will adjust to your exact village:"
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                // Auto-Detect Location Card
+                // Auto-Detect Exact Village Card
                 Surface(
                     shape = RoundedCornerShape(16.dp),
                     color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
@@ -317,9 +336,9 @@ fun CityPickerDialog(
                             Column {
                                 Text(
                                     text = when (language) {
-                                        "mr" -> if (isDetectingLocation) "स्थान शोधत आहे..." else "माझे स्थान आपोआप ओळखा (GPS)"
-                                        "hi" -> if (isDetectingLocation) "स्थान खोज रहे हैं..." else "मेरा स्थान स्वतः पहचानें (GPS)"
-                                        else -> if (isDetectingLocation) "Detecting GPS location..." else "Auto-Detect My Location (GPS)"
+                                        "mr" -> if (isDetectingLocation) "अचूक गाव शोधत आहे..." else "माझे अचूक गाव ओळखा (GPS) 🏡"
+                                        "hi" -> if (isDetectingLocation) "सटीक गाँव खोज रहे हैं..." else "मेरा सटीक गाँव पहचानें (GPS) 🏡"
+                                        else -> if (isDetectingLocation) "Detecting exact village..." else "Auto-Detect My Exact Village (GPS) 🏡"
                                     },
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.5.sp,
@@ -327,9 +346,9 @@ fun CityPickerDialog(
                                 )
                                 Text(
                                     text = when (language) {
-                                        "mr" -> "GPS द्वारे जवळचे पंचांग शहर त्वरित सेट करा"
-                                        "hi" -> "GPS द्वारा निकटतम पंचांग शहर तुरंत सेट करें"
-                                        else -> "Instantly finds closest Panchang city via GPS"
+                                        "mr" -> "आपण ज्या गावात आहात ते अचूक गाव GPS द्वारे सेट करा"
+                                        "hi" -> "आप जिस गाँव में हैं वह सटीक गाँव GPS द्वारा सेट करें"
+                                        else -> "Finds your exact village location via GPS"
                                     },
                                     fontSize = 11.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -346,18 +365,25 @@ fun CityPickerDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Search Box
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { searchQuery = it },
+                    onValueChange = {
+                        searchQuery = it
+                        if (it.length >= 3) {
+                            searchOnlineVillage(it)
+                        } else if (it.isBlank()) {
+                            onlineVillageResults = emptyList()
+                        }
+                    },
                     placeholder = {
                         Text(
                             text = when (language) {
-                                "mr" -> "शहर शोधा (उदा. पुणे, नाशिक, मुंबई)..."
-                                "hi" -> "शहर खोजें (उदा. दिल्ली, मुंबई, काशी)..."
-                                else -> "Search city (e.g. Delhi, Mumbai)..."
+                                "mr" -> "गाव किंवा शहर शोधा (उदा. शिरवळ, बारामती)..."
+                                "hi" -> "गाँव या शहर खोजें (उदा. शिरडी, बारामती)..."
+                                else -> "Search village or city (e.g. Shirwal)..."
                             },
                             fontSize = 13.sp
                         )
@@ -372,7 +398,10 @@ fun CityPickerDialog(
                     },
                     trailingIcon = {
                         if (searchQuery.isNotBlank()) {
-                            IconButton(onClick = { searchQuery = "" }) {
+                            IconButton(onClick = {
+                                searchQuery = ""
+                                onlineVillageResults = emptyList()
+                            }) {
                                 Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear", modifier = Modifier.size(16.dp))
                             }
                         }
@@ -386,13 +415,150 @@ fun CityPickerDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                // Action row: Online search trigger & manual entry
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (searchQuery.trim().length >= 2) {
+                        TextButton(
+                            onClick = { searchOnlineVillage(searchQuery) },
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                        ) {
+                            if (isSearchingOnline) {
+                                CircularProgressIndicator(modifier = Modifier.size(12.dp), strokeWidth = 1.5.dp, color = KesariyaSaffron)
+                                Spacer(modifier = Modifier.width(6.dp))
+                            }
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "गाव शोधा 🔍"
+                                    "hi" -> "गाँव खोजें 🔍"
+                                    else -> "Search Village 🔍"
+                                },
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = KesariyaSaffron
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.width(1.dp))
+                    }
 
-                // City List
+                    TextButton(
+                        onClick = { showManualVillageDialog = true },
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = KesariyaSaffron, modifier = Modifier.size(14.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = when (language) {
+                                "mr" -> "गाव प्रविष्ट करा"
+                                "hi" -> "गाँव प्रविष्ट करें"
+                                else -> "Enter Village"
+                            },
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = KesariyaSaffron
+                        )
+                    }
+                }
+
+                // Locations list
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.weight(1f)
                 ) {
+                    // Online Village Search Results
+                    if (onlineVillageResults.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "शोधलेली गावे (ऑनलाइन):"
+                                    "hi" -> "खोजे गए गाँव (ऑनलाइन):"
+                                    else -> "Found Villages (Online):"
+                                },
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = KesariyaSaffron,
+                                modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
+                            )
+                        }
+
+                        items(onlineVillageResults) { village ->
+                            Surface(
+                                shape = RoundedCornerShape(14.dp),
+                                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
+                                border = BorderStroke(1.dp, KesariyaSaffron.copy(alpha = 0.4f)),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .clickable {
+                                        onCitySelected(village)
+                                        onDismiss()
+                                    }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(horizontal = 14.dp, vertical = 10.dp)
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Text(text = "🏡", fontSize = 13.sp)
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(
+                                                text = village.displayName(language),
+                                                fontSize = 14.5.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                        Text(
+                                            text = village.displaySubtext(language),
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+
+                                    Text(
+                                        text = when (language) {
+                                            "mr" -> "निवडा"
+                                            "hi" -> "चुनें"
+                                            else -> "Select"
+                                        },
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = KesariyaSaffron
+                                    )
+                                }
+                            }
+                        }
+
+                        item {
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 6.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+                        }
+                    }
+
+                    // Standard Cities
+                    item {
+                        Text(
+                            text = when (language) {
+                                "mr" -> "प्रमुख शहरे / संदर्भ स्थाने:"
+                                "hi" -> "प्रमुख शहर / संदर्भ स्थान:"
+                                else -> "Major Reference Cities:"
+                            },
+                            fontSize = 11.5.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
+                        )
+                    }
+
                     items(filteredCities) { city ->
                         val isSelected = city.id == currentCityId
                         Surface(
@@ -416,13 +582,13 @@ fun CityPickerDialog(
                             ) {
                                 Column {
                                     Text(
-                                        text = if (language == "en") city.name else city.hindiName,
+                                        text = city.displayName(language),
                                         fontSize = 15.sp,
                                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                         color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = if (language == "en") city.state else city.hindiState,
+                                        text = city.displaySubtext(language),
                                         fontSize = 11.sp,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -446,6 +612,176 @@ fun CityPickerDialog(
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Clean dialog for manually entering a village name and district.
+ */
+@Composable
+private fun ManualVillageDialog(
+    language: String,
+    onDismiss: () -> Unit,
+    onVillageCreated: (City) -> Unit
+) {
+    val context = LocalContext.current
+    var villageName by remember { mutableStateOf("") }
+    var district by remember { mutableStateOf("") }
+    var state by remember { mutableStateOf("Maharashtra") }
+    var isResolvingCoords by remember { mutableStateOf(false) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 6.dp,
+            modifier = Modifier.fillMaxWidth().padding(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                Text(
+                    text = when (language) {
+                        "mr" -> "आपले गाव प्रविष्ट करा 🏡"
+                        "hi" -> "अपना गाँव प्रविष्ट करें 🏡"
+                        else -> "Enter Your Village 🏡"
+                    },
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                OutlinedTextField(
+                    value = villageName,
+                    onValueChange = { villageName = it },
+                    label = {
+                        Text(
+                            when (language) {
+                                "mr" -> "गावाचे नाव (उदा. शिरवळ, केडगाव)"
+                                "hi" -> "गाँव का नाम (उदा. शिरडी, केडगांव)"
+                                else -> "Village Name (e.g. Shirwal)"
+                            }
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OutlinedTextField(
+                    value = district,
+                    onValueChange = { district = it },
+                    label = {
+                        Text(
+                            when (language) {
+                                "mr" -> "तालुका किंवा जिल्हा (उदा. सातारा, पुणे)"
+                                "hi" -> "तहसील या जिला (उदा. सतारा, पुणे)"
+                                else -> "Taluka / District (e.g. Satara)"
+                            }
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OutlinedTextField(
+                    value = state,
+                    onValueChange = { state = it },
+                    label = {
+                        Text(
+                            when (language) {
+                                "mr" -> "राज्य (उदा. महाराष्ट्र)"
+                                "hi" -> "राज्य (उदा. महाराष्ट्र)"
+                                else -> "State (e.g. Maharashtra)"
+                            }
+                        )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(14.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(
+                            text = when (language) {
+                                "mr" -> "रद्द करा"
+                                "hi" -> "रद्द करें"
+                                else -> "Cancel"
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Button(
+                        onClick = {
+                            if (villageName.isBlank()) {
+                                Toast.makeText(context, "कृपया गावाचे नाव प्रविष्ट करा", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            isResolvingCoords = true
+                            val query = "${villageName.trim()}, ${district.trim()}, ${state.trim()} India"
+                            LocationHelper.searchVillages(context, query, language) { list ->
+                                isResolvingCoords = false
+                                if (list.isNotEmpty()) {
+                                    val best = list.first()
+                                    onVillageCreated(
+                                        CityRepository.createVillage(
+                                            name = villageName.trim(),
+                                            hindiName = villageName.trim(),
+                                            district = district.trim().ifBlank { best.district },
+                                            state = state.trim().ifBlank { best.state },
+                                            latitude = best.latitude,
+                                            longitude = best.longitude
+                                        )
+                                    )
+                                } else {
+                                    // Default to Maharashtra coordinates if search unavailable
+                                    val fallback = CityRepository.findNearestCity(19.0, 74.0)
+                                    onVillageCreated(
+                                        CityRepository.createVillage(
+                                            name = villageName.trim(),
+                                            hindiName = villageName.trim(),
+                                            district = district.trim().ifBlank { null },
+                                            state = state.trim().ifBlank { "Maharashtra" },
+                                            latitude = fallback.latitude,
+                                            longitude = fallback.longitude
+                                        )
+                                    )
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = KesariyaSaffron),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        if (isResolvingCoords) {
+                            CircularProgressIndicator(modifier = Modifier.size(16.dp), color = Color.White, strokeWidth = 2.dp)
+                            Spacer(modifier = Modifier.width(6.dp))
+                        }
+                        Text(
+                            text = when (language) {
+                                "mr" -> "गाव सेट करा 🪔"
+                                "hi" -> "गाँव सेट करें 🪔"
+                                else -> "Save Village 🪔"
+                            },
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }

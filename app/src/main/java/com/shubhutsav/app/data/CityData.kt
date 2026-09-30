@@ -8,8 +8,34 @@ data class City(
     val hindiState: String,
     val latitude: Double,
     val longitude: Double,
-    val timezoneOffsetHours: Double = 5.5
-)
+    val timezoneOffsetHours: Double = 5.5,
+    val isVillage: Boolean = false,
+    val district: String? = null,
+    val hindiDistrict: String? = null
+) {
+    fun displayName(language: String = "en"): String {
+        return when (language) {
+            "en" -> name
+            else -> if (hindiName.isNotBlank()) hindiName else name
+        }
+    }
+
+    fun displaySubtext(language: String = "en"): String {
+        val d = when (language) {
+            "en" -> district
+            else -> hindiDistrict ?: district
+        }
+        val s = when (language) {
+            "en" -> state
+            else -> if (hindiState.isNotBlank()) hindiState else state
+        }
+        return when {
+            !d.isNullOrBlank() && !s.isNullOrBlank() && !d.equals(name, ignoreCase = true) -> "$d, $s"
+            !d.isNullOrBlank() -> d
+            else -> s
+        }
+    }
+}
 
 object CityRepository {
     val cities = listOf(
@@ -80,5 +106,40 @@ object CityRepository {
         val nearest = findNearestCity(lat, lon)
         val dist = calculateDistanceKm(lat, lon, nearest.latitude, nearest.longitude)
         return Pair(nearest, dist)
+    }
+
+    /**
+     * Creates a custom village location with exact GPS coordinates and localized details
+     */
+    fun createVillage(
+        name: String,
+        hindiName: String = "",
+        district: String? = null,
+        hindiDistrict: String? = null,
+        state: String = "",
+        hindiState: String = "",
+        latitude: Double,
+        longitude: Double
+    ): City {
+        val cleanName = name.trim()
+        val cleanHindiName = if (hindiName.isNotBlank()) hindiName.trim() else cleanName
+        val cleanDistrict = district?.trim()?.ifBlank { null }
+        val cleanHindiDistrict = hindiDistrict?.trim()?.ifBlank { cleanDistrict }
+        val cleanState = state.trim().ifBlank { "India" }
+        val cleanHindiState = hindiState.trim().ifBlank { cleanState }
+        val id = "village_${java.lang.String.format(java.util.Locale.US, "%.4f_%.4f", latitude, longitude)}"
+
+        return City(
+            id = id,
+            name = cleanName,
+            hindiName = cleanHindiName,
+            state = cleanState,
+            hindiState = cleanHindiState,
+            latitude = latitude,
+            longitude = longitude,
+            isVillage = true,
+            district = cleanDistrict,
+            hindiDistrict = cleanHindiDistrict
+        )
     }
 }

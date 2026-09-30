@@ -72,6 +72,7 @@ fun SettingsScreen(
     if (showCityPicker) {
         CityPickerDialog(
             currentCityId = city.id,
+            currentCity = city,
             isHindi = language == "hi",
             language = language,
             onCitySelected = onCityChanged,
@@ -514,18 +515,31 @@ fun SettingsScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = when (language) {
-                                    "mr" -> "शहर / ठिकाण"
-                                    "hi" -> "शहर / स्थान"
-                                    else -> "City & Panchang Location"
+                                    "mr" -> "गाव / शहर व पंचांग स्थान"
+                                    "hi" -> "गाँव / शहर व पंचांग स्थान"
+                                    else -> "Village / City & Panchang Location"
                                 },
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 14.sp
                             )
                             Text(
-                                text = "${if (language == "en") city.name else city.hindiName} (${if (language == "en") city.state else city.hindiState})",
+                                text = if (city.isVillage) "🏡 ${city.displayName(language)} (${city.displaySubtext(language)})"
+                                       else "${city.displayName(language)} (${city.displaySubtext(language)})",
                                 fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = if (city.isVillage) KesariyaSaffron else MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = if (city.isVillage) FontWeight.SemiBold else FontWeight.Normal
                             )
+                            if (city.isVillage) {
+                                Text(
+                                    text = when (language) {
+                                        "mr" -> "अचूक GPS गाव स्थान (पंचांग या स्थानानुसार)"
+                                        "hi" -> "सटीक GPS गाँव स्थान (पंचांग इसी स्थान अनुसार)"
+                                        else -> "Exact GPS village location"
+                                    },
+                                    fontSize = 10.5.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Surface(

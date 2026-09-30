@@ -76,6 +76,7 @@ fun HomeScreen(
     if (showCityPicker) {
         CityPickerDialog(
             currentCityId = city.id,
+            currentCity = city,
             isHindi = language == "hi",
             language = language,
             onCitySelected = onCityChanged,
@@ -95,7 +96,7 @@ fun HomeScreen(
                 onLanguageChange = onLanguageChange,
                 isHindi = language != "en",
                 onToggleLanguage = onToggleLanguage,
-                cityName = if (language == "en") city.name else city.hindiName,
+                cityName = if (city.isVillage) "🏡 " + city.displayName(language) else city.displayName(language),
                 onCityClick = { showCityPicker = true },
                 onSettingsClick = { navController.navigate("settings") }
             )

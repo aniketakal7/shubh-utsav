@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 5,
-  "latestVersionName": "1.3.0",
-  "minSupportedVersionCode": 1,
-  "isForceUpdate": false,
+  "latestVersionCode": 6,
+  "latestVersionName": "1.3.1",
+  "minSupportedVersionCode": 6,
+  "isForceUpdate": true,
   "titles": {
-    "en": "Shubh Utsav 1.3.0 Available! 🎉",
-    "hi": "शुभ उत्सव 1.3.0 उपलब्ध है! 🎉",
-    "mr": "शुभ उत्सव १.३.० नवीन अपडेट उपलब्ध आहे! 🎉"
+    "en": "Shubh Utsav 1.3.1 Available! 🎉",
+    "hi": "शुभ उत्सव 1.3.1 उपलब्ध है! 🎉",
+    "mr": "शुभ उत्सव १.३.१ नवीन अपडेट उपलब्ध आहे! 🎉"
   },
   "releaseNotes": {
-    "en": "• All-new Edge-to-Edge UI & modern visual design\n• Smooth Floating Island Navigation Bar\n• Enhanced sacred color palettes, gradients & typography\n• Refined Panchang card with celestial ambient styling",
-    "hi": "• नया आधुनिक एज-टू-एज इंटरफेस और सुरुचिपूर्ण डिज़ाइन\n• सुंदर फ्लोटिंग आइलैंड नेविगेशन बार\n• समृद्ध रंग पैलेट, ग्रेडिएंट और बेहतर टाइपोग्राफी\n• नए खगोलीय रूप के साथ पंचांग कार्ड",
-    "mr": "• संपूर्ण नवीन एज-टू-एज युझर इंटरफेस आणि आधुनिक रूप\n• सुंदर फ्लोटिंग आयलँड नेव्हिगेशन बार\n• समृद्ध पवित्र रंग, ग्रेडियंट्स आणि आकर्षक फॉन्ट\n• खगोलीय सजावटीसह सुधारित दैनिक पंचांग कार्ड"
+    "en": "• Enhanced GPS location with exact village/town detection\n• Improved City Picker with smarter search & selection\n• Better onboarding flow for new users\n• Refined Panchang calculations for your precise location",
+    "hi": "• सटीक गाँव/शहर की पहचान के साथ बेहतर GPS लोकेशन\n• स्मार्ट खोज और चयन के साथ सुधारित शहर चयनकर्ता\n• नए उपयोगकर्ताओं के लिए बेहतर ऑनबोर्डिंग\n• आपके सटीक स्थान के लिए परिष्कृत पंचांग गणना",
+    "mr": "• अचूक गाव/शहर ओळखीसह सुधारित GPS स्थान\n• स्मार्ट शोध आणि निवडीसह सुधारित शहर निवडक\n• नवीन वापरकर्त्यांसाठी सोपी ऑनबोर्डिंग\n• तुमच्या अचूक स्थानासाठी परिष्कृत पंचांग गणना"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.3.0",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.3.0/app-release.apk",
-  "publishedDate": "2026-09-23"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.3.1",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.3.1/app-release.apk",
+  "publishedDate": "2026-09-30"
 }

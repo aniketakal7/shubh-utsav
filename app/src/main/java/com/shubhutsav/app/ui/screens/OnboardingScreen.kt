@@ -43,12 +43,16 @@ fun OnboardingScreen(
     onComplete: (isHindi: Boolean, cityId: String, ritualStyle: String) -> Unit = { _, _, _ -> },
     onCompleteLanguage: (language: String, cityId: String, ritualStyle: String) -> Unit = { lang, city, ritual ->
         onComplete(lang == "hi", city, ritual)
+    },
+    onCompleteLocation: (language: String, location: City, ritualStyle: String) -> Unit = { lang, loc, ritual ->
+        onCompleteLanguage(lang, loc.id, ritual)
     }
 ) {
     val context = LocalContext.current
     var selectedLanguage by remember { mutableStateOf("en") }
     val isHindi = selectedLanguage == "hi"
-    var selectedCity by remember { mutableStateOf(CityRepository.getCityById("delhi")) }
+    val prefs = remember { com.shubhutsav.app.data.PreferencesManager(context) }
+    var selectedCity by remember { mutableStateOf(prefs.getSelectedLocation()) }
     var showCityPicker by remember { mutableStateOf(false) }
     var selectedRitualStyle by remember { mutableStateOf("General") }
     var isDetectingLocation by remember { mutableStateOf(false) }
@@ -56,27 +60,17 @@ fun OnboardingScreen(
 
     fun processLocationDetection() {
         isDetectingLocation = true
-        LocationHelper.detectNearestCity(context) { result ->
+        LocationHelper.detectExactLocation(context, selectedLanguage) { result ->
             isDetectingLocation = false
             when (result) {
                 is LocationResult.Success -> {
                     val detected = result.detectedLocation
+                    val vName = detected.villageName ?: detected.city.displayName(selectedLanguage)
+                    val distName = detected.district
                     val toastMsg = when (selectedLanguage) {
-                        "mr" -> {
-                            val place = detected.detectedPlaceName?.let { "$it (जवळचे शहर: " } ?: ""
-                            val suffix = if (detected.detectedPlaceName != null) ")" else ""
-                            "स्थान ओळखले: $place${detected.city.name}$suffix, अंतर: ${detected.distanceKm} किमी"
-                        }
-                        "hi" -> {
-                            val place = detected.detectedPlaceName?.let { "$it (निकटतम शहर: " } ?: ""
-                            val suffix = if (detected.detectedPlaceName != null) ")" else ""
-                            "स्थान पहचाना गया: $place${detected.city.hindiName}$suffix, दूरी: ${detected.distanceKm} किमी"
-                        }
-                        else -> {
-                            val place = detected.detectedPlaceName?.let { "$it (Nearest: " } ?: ""
-                            val suffix = if (detected.detectedPlaceName != null) ")" else ""
-                            "Location detected: $place${detected.city.name}$suffix (${detected.distanceKm} km away)"
-                        }
+                        "mr" -> "अचूक गाव ओळखले: $vName${if (distName != null) " ($distName)" else ""} 🏡"
+                        "hi" -> "सटीक गाँव पहचाना गया: $vName${if (distName != null) " ($distName)" else ""} 🏡"
+                        else -> "Exact Village Detected: $vName${if (distName != null) " ($distName)" else ""} 🏡"
                     }
                     Toast.makeText(context, toastMsg, Toast.LENGTH_LONG).show()
                     selectedCity = detected.city
@@ -202,6 +196,7 @@ fun OnboardingScreen(
     if (showCityPicker) {
         CityPickerDialog(
             currentCityId = selectedCity.id,
+            currentCity = selectedCity,
             isHindi = isHindi,
             language = selectedLanguage,
             onCitySelected = { selectedCity = it },
@@ -381,12 +376,12 @@ fun OnboardingScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = if (selectedLanguage == "en") selectedCity.name else selectedCity.hindiName,
+                                text = if (selectedCity.isVillage) "🏡 " + selectedCity.displayName(selectedLanguage) else selectedCity.displayName(selectedLanguage),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = if (selectedLanguage == "en") selectedCity.state else selectedCity.hindiState,
+                                text = selectedCity.displaySubtext(selectedLanguage),
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -419,9 +414,9 @@ fun OnboardingScreen(
                         label = {
                             Text(
                                 text = when (selectedLanguage) {
-                                    "mr" -> if (isDetectingLocation) "शोधत आहे..." else "GPS ने ओळखा"
-                                    "hi" -> if (isDetectingLocation) "खोज रहे हैं..." else "GPS से पहचानें"
-                                    else -> if (isDetectingLocation) "Detecting..." else "Auto-Detect (GPS)"
+                                    "mr" -> if (isDetectingLocation) "शोधत आहे..." else "GPS ने गाव ओळखा 🏡"
+                                    "hi" -> if (isDetectingLocation) "खोज रहे हैं..." else "GPS से गाँव पहचानें 🏡"
+                                    else -> if (isDetectingLocation) "Detecting..." else "Auto-Detect Village 🏡"
                                 },
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -512,8 +507,10 @@ fun OnboardingScreen(
 
             Button(
                 onClick = {
+                    prefs.saveSelectedLocation(selectedCity)
                     onComplete(selectedLanguage == "hi", selectedCity.id, selectedRitualStyle)
                     onCompleteLanguage(selectedLanguage, selectedCity.id, selectedRitualStyle)
+                    onCompleteLocation(selectedLanguage, selectedCity, selectedRitualStyle)
                 },
                 shape = RoundedCornerShape(22.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = RoyalMaroon),

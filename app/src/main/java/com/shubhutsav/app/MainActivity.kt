@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.shubhutsav.app.data.City
 import com.shubhutsav.app.data.CityRepository
 import com.shubhutsav.app.data.FestivalRepository
 import com.shubhutsav.app.data.PreferencesManager
@@ -50,8 +51,15 @@ fun ShubhUtsavApp() {
     var language by remember { mutableStateOf(prefs.languageCode) }
     var isHindi by remember { mutableStateOf(prefs.isHindi) }
     var isDark by remember { mutableStateOf(prefs.isDarkMode) }
-    var cityId by remember { mutableStateOf(prefs.cityId) }
+    var currentLocation by remember { mutableStateOf(prefs.getSelectedLocation()) }
+    var cityId by remember { mutableStateOf(currentLocation.id) }
     var isPremium by remember { mutableStateOf(prefs.isPremium) }
+
+    val handleLocationChange: (City) -> Unit = { newLocation ->
+        currentLocation = newLocation
+        cityId = newLocation.id
+        prefs.saveSelectedLocation(newLocation)
+    }
 
     var updateDialogInfo by remember { mutableStateOf<UpdateInfo?>(null) }
     val currentVersionName = remember { UpdateManager.getCurrentVersionName(context) }
@@ -85,7 +93,6 @@ fun ShubhUtsavApp() {
         handleLanguageChange(nextLang)
     }
 
-    val currentCity = remember(cityId) { CityRepository.getCityById(cityId) }
     val navController = rememberNavController()
 
     ShubhUtsavTheme(darkTheme = isDark) {
@@ -110,6 +117,7 @@ fun ShubhUtsavApp() {
 
                             isHindi = selectedHindi
                             cityId = selectedCityId
+                            currentLocation = prefs.getSelectedLocation()
 
                             navController.navigate("home") {
                                 popUpTo("onboarding") { inclusive = true }
@@ -122,6 +130,17 @@ fun ShubhUtsavApp() {
                             prefs.ritualStyle = selectedRitualStyle
 
                             cityId = selectedCityId
+                            currentLocation = prefs.getSelectedLocation()
+
+                            navController.navigate("home") {
+                                popUpTo("onboarding") { inclusive = true }
+                            }
+                        },
+                        onCompleteLocation = { selectedLang, selectedLocation, selectedRitualStyle ->
+                            prefs.isOnboarded = true
+                            handleLanguageChange(selectedLang)
+                            handleLocationChange(selectedLocation)
+                            prefs.ritualStyle = selectedRitualStyle
 
                             navController.navigate("home") {
                                 popUpTo("onboarding") { inclusive = true }
@@ -134,15 +153,12 @@ fun ShubhUtsavApp() {
                 composable("home") {
                     HomeScreen(
                         navController = navController,
-                        city = currentCity,
+                        city = currentLocation,
                         isHindi = isHindi,
                         language = language,
                         onLanguageChange = handleLanguageChange,
                         onToggleLanguage = handleToggleLanguage,
-                        onCityChanged = { newCity ->
-                            cityId = newCity.id
-                            prefs.cityId = newCity.id
-                        }
+                        onCityChanged = handleLocationChange
                     )
                 }
 
@@ -204,7 +220,7 @@ fun ShubhUtsavApp() {
                 composable("settings") {
                     SettingsScreen(
                         navController = navController,
-                        city = currentCity,
+                        city = currentLocation,
                         isHindi = isHindi,
                         language = language,
                         isDark = isDark,
@@ -215,10 +231,7 @@ fun ShubhUtsavApp() {
                             isDark = newDark
                             prefs.isDarkMode = newDark
                         },
-                        onCityChanged = { newCity ->
-                            cityId = newCity.id
-                            prefs.cityId = newCity.id
-                        },
+                        onCityChanged = handleLocationChange,
                         onUpgradePremium = {
                             isPremium = true
                             prefs.isPremium = true
