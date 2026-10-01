@@ -1,19 +1,20 @@
 {
-  "latestVersionCode": 7,
-  "latestVersionName": "1.4.0",
+  "latestVersionCode": 8,
+  "latestVersionName": "1.4.1",
   "minSupportedVersionCode": 6,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.4.0 — Developer Branding Update! 🎉",
-    "hi": "शुभ उत्सव 1.4.0 — डेवलपर ब्रांडिंग अपडेट! 🎉",
-    "mr": "शुभ उत्सव १.४.० — डेव्हलपर ब्रँडिंग अपडेट! 🎉"
+    "en": "Shubh Utsav 1.4.1 — Smoother Navigation! ✨",
+    "hi": "शुभ उत्सव 1.4.1 — स्मूथ नेविगेशन! ✨",
+    "mr": "शुभ उत्सव १.४.१ — स्मूथ नॅव्हिगेशन! ✨"
   },
   "releaseNotes": {
-    "en": "• \"Made by Aniket Akal\" branding on Home Screen footer\n• Developer credit on Onboarding screen for new users\n• Enhanced premium credit card in Settings with gradient design\n• \"by Aniket Akal\" watermark on bottom navigation\n• Share App message now credits Aniket Akal with Instagram handle",
-    "hi": "• होम स्क्रीन पर \"Aniket Akal द्वारा निर्मित\" फुटर\n• नए उपयोगकर्ताओं के लिए ऑनबोर्डिंग में डेवलपर क्रेडिट\n• सेटिंग्स में ग्रेडिएंट डिज़ाइन के साथ प्रीमियम क्रेडिट कार्ड\n• बॉटम नेविगेशन में \"by Aniket Akal\" वॉटरमार्क\n• शेयर ऐप संदेश में Aniket Akal का Instagram हैंडल",
-    "mr": "• होम स्क्रीनवर \"Aniket Akal ने बनवले\" फुटर\n• नवीन वापरकर्त्यांसाठी ऑनबोर्डिंगमध्ये डेव्हलपर क्रेडिट\n• सेटिंग्जमध्ये ग्रेडिएंट डिझाइनसह प्रीमियम क्रेडिट कार्ड\n• बॉटम नॅव्हिगेशनमध्ये \"by Aniket Akal\" वॉटरमार्क\n• शेअर अ‍ॅप संदेशात Aniket Akal चे Instagram हँडल"
+    "en": "• Smoother bottom navigation with spring-based animations\n• Added ripple touch feedback on nav buttons\n• Icon scale bounce effect on tab selection\n• Animated label expand/collapse with fade transitions\n• Overall snappier and more responsive navigation feel",
+    "hi": "• स्प्रिंग-आधारित एनिमेशन के साथ स्मूथ बॉटम नेविगेशन\n• नेव बटन पर रिपल टच फीडबैक जोड़ा\n• टैब चयन पर आइकन स्केल बाउंस इफेक्ट\n• फेड ट्रांज़िशन के साथ एनिमेटेड लेबल\n• समग्र रूप से तेज़ और अधिक रेस्पॉन्सिव नेविगेशन",
+    "mr": "• स्प्रिंग-आधारित अ‍ॅनिमेशनसह स्मूथ बॉटम नॅव्हिगेशन\n• नॅव्ह बटणांवर रिपल टच फीडबॅक जोडला\n• टॅब निवडीवर आयकॉन स्केल बाउंस इफेक्ट\n• फेड ट्रांझिशनसह अ‍ॅनिमेटेड लेबल\n• एकूणच जलद आणि अधिक रिस्पॉन्सिव्ह नॅव्हिगेशन"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.4.0",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.4.0/app-release.apk",
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.4.1",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.4.1/app-release.apk",
   "publishedDate": "2026-10-01"
 }
+

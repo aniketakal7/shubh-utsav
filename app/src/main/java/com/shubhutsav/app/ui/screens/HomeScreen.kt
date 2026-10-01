@@ -192,6 +192,17 @@ fun HomeScreen(
             }
 
             item {
+                HomeActionCard(
+                    icon = "\uD83D\uDDD3",
+                    title = "My Festival Companion",
+                    subtitle = "Plan celebrations, family tasks, calendar and local notes",
+                    accentColor = VedicGold,
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { navController.navigate("companion") }
+                )
+            }
+
+            item {
                 SectionHeader(
                     emoji = "⚡",
                     title = when (language) {
@@ -397,4 +408,3 @@ private fun HomeActionCard(
         }
     }
 }
-

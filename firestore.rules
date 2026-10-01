@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each account can read and write only its own private companion plan.
+    match /users/{userId}/private/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Community events are curated by an administrator or deployment process.
+    match /communityEvents/{eventId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

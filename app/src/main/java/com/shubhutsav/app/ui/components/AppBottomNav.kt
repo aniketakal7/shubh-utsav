@@ -1,8 +1,15 @@
 package com.shubhutsav.app.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,6 +33,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -133,15 +142,34 @@ private fun IslandNavItem(
     label: String,
     onClick: () -> Unit
 ) {
+    // Spring-based color animation — feels snappy and natural
     val bg by animateColorAsState(
         targetValue = if (selected) RoyalMaroon else Color.Transparent,
-        animationSpec = tween(220),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
         label = "nav_bg"
     )
+
+    // Spring-based padding — expands with a slight bounce
     val pad by animateDpAsState(
         targetValue = if (selected) 14.dp else 10.dp,
-        animationSpec = tween(220),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
         label = "nav_pad"
+    )
+
+    // Icon scale bounce on selection for tactile feel
+    val iconScale by animateFloatAsState(
+        targetValue = if (selected) 1.15f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "nav_icon_scale"
     )
 
     Row(
@@ -150,7 +178,10 @@ private fun IslandNavItem(
             .background(bg)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null,
+                indication = ripple(
+                    bounded = true,
+                    color = if (selected) Color.White.copy(alpha = 0.3f) else RoyalMaroon.copy(alpha = 0.15f)
+                ),
                 onClick = onClick
             )
             .padding(horizontal = pad, vertical = 10.dp),
@@ -160,16 +191,39 @@ private fun IslandNavItem(
             imageVector = if (selected) selectedIcon else unselectedIcon,
             contentDescription = label,
             tint = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(22.dp)
+            modifier = Modifier
+                .size(22.dp)
+                .scale(iconScale)
         )
-        if (selected) {
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = label,
-                color = Color.White,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
+        // Animated label visibility — smooth expand/collapse instead of abrupt show/hide
+        AnimatedVisibility(
+            visible = selected,
+            enter = expandHorizontally(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMediumLow
+                )
+            ) + fadeIn(
+                animationSpec = spring(stiffness = Spring.StiffnessLow)
+            ),
+            exit = shrinkHorizontally(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            ) + fadeOut(
+                animationSpec = spring(stiffness = Spring.StiffnessMedium)
             )
+        ) {
+            Row {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = label,
+                    color = Color.White,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

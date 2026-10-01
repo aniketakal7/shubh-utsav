@@ -13,8 +13,8 @@ android {
         applicationId = "com.shubhutsav.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.4.0"
+        versionCode = 8
+        versionName = "1.4.1"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -1,6 +1,7 @@
 package com.shubhutsav.app.ui.screens
 
 import android.widget.Toast
+import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,6 +50,7 @@ import com.shubhutsav.app.ui.theme.RoyalMaroonDark
 import com.shubhutsav.app.ui.theme.SuccessGreen
 import com.shubhutsav.app.ui.theme.VedicGold
 import com.shubhutsav.app.ui.theme.VedicGoldLight
+import java.util.Locale
 
 @Composable
 fun FestivalDetailScreen(
@@ -61,6 +64,13 @@ fun FestivalDetailScreen(
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val prefs = remember { PreferencesManager(context) }
+    var ttsReady by remember { mutableStateOf(false) }
+    val textToSpeech = remember { mutableStateOf<TextToSpeech?>(null) }
+    DisposableEffect(context) {
+        val service = TextToSpeech(context) { status -> ttsReady = status == TextToSpeech.SUCCESS }
+        textToSpeech.value = service
+        onDispose { service.stop(); service.shutdown() }
+    }
 
     var selectedTab by remember { mutableStateOf(0) }
     var showExplainSimply by remember { mutableStateOf(false) }
@@ -660,6 +670,22 @@ fun FestivalDetailScreen(
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+
+                                IconButton(
+                                    onClick = {
+                                        val locale = if (language == "en") Locale.US else Locale("hi", "IN")
+                                        textToSpeech.value?.language = locale
+                                        textToSpeech.value?.speak(
+                                            "${step.getTitle(language)}. ${step.getInstruction(language)}",
+                                            TextToSpeech.QUEUE_FLUSH,
+                                            null,
+                                            "${festival.id}_$index"
+                                        )
+                                    },
+                                    enabled = ttsReady
+                                ) {
+                                    Icon(Icons.Default.VolumeUp, contentDescription = "Read this step aloud")
+                                }
 
                                 if (step.mantra != null) {
                                     Spacer(modifier = Modifier.height(8.dp))

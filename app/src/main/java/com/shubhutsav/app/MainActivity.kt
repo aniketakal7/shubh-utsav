@@ -178,6 +178,15 @@ fun ShubhUtsavApp() {
                     )
                 }
 
+                composable("companion") {
+                    CompanionScreen(
+                        navController = navController,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
+
                 // Festival Detail Screen
                 composable(
                     route = "festival/{id}",

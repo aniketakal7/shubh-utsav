@@ -95,6 +95,37 @@ class PreferencesManager(context: Context) {
         get() = prefs.getBoolean("is_premium", false)
         set(value) = prefs.edit().putBoolean("is_premium", value).apply()
 
+    // --- Personal festival companion ---
+    fun plannedFestivalIds(): Set<String> = prefs.getStringSet("planned_festivals", emptySet()) ?: emptySet()
+
+    fun isFestivalPlanned(festivalId: String): Boolean = plannedFestivalIds().contains(festivalId)
+
+    fun setFestivalPlanned(festivalId: String, planned: Boolean) {
+        val ids = plannedFestivalIds().toMutableSet()
+        if (planned) ids.add(festivalId) else ids.remove(festivalId)
+        prefs.edit().putStringSet("planned_festivals", ids).apply()
+    }
+
+    fun householdMembers(): List<String> =
+        (prefs.getStringSet("household_members", emptySet()) ?: emptySet()).sorted()
+
+    fun addHouseholdMember(name: String) {
+        if (name.isBlank()) return
+        prefs.edit().putStringSet("household_members", householdMembers().plus(name.trim()).toSet()).apply()
+    }
+
+    fun removeHouseholdMember(name: String) {
+        prefs.edit().putStringSet("household_members", householdMembers().minus(name).toSet()).apply()
+    }
+
+    var selectedTradition: String
+        get() = prefs.getString("selected_tradition", "General Indian") ?: "General Indian"
+        set(value) = prefs.edit().putString("selected_tradition", value).apply()
+
+    var templeNote: String
+        get() = prefs.getString("temple_note", "") ?: ""
+        set(value) = prefs.edit().putString("temple_note", value).apply()
+
     // --- App Update Preferences ---
     var lastUpdateCheckTime: Long
         get() = prefs.getLong("last_update_check_time", 0L)
