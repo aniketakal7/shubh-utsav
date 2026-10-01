@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 6,
-  "latestVersionName": "1.3.1",
+  "latestVersionCode": 7,
+  "latestVersionName": "1.4.0",
   "minSupportedVersionCode": 6,
-  "isForceUpdate": true,
+  "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.3.1 Available! 🎉",
-    "hi": "शुभ उत्सव 1.3.1 उपलब्ध है! 🎉",
-    "mr": "शुभ उत्सव १.३.१ नवीन अपडेट उपलब्ध आहे! 🎉"
+    "en": "Shubh Utsav 1.4.0 — Developer Branding Update! 🎉",
+    "hi": "शुभ उत्सव 1.4.0 — डेवलपर ब्रांडिंग अपडेट! 🎉",
+    "mr": "शुभ उत्सव १.४.० — डेव्हलपर ब्रँडिंग अपडेट! 🎉"
   },
   "releaseNotes": {
-    "en": "• Enhanced GPS location with exact village/town detection\n• Improved City Picker with smarter search & selection\n• Better onboarding flow for new users\n• Refined Panchang calculations for your precise location",
-    "hi": "• सटीक गाँव/शहर की पहचान के साथ बेहतर GPS लोकेशन\n• स्मार्ट खोज और चयन के साथ सुधारित शहर चयनकर्ता\n• नए उपयोगकर्ताओं के लिए बेहतर ऑनबोर्डिंग\n• आपके सटीक स्थान के लिए परिष्कृत पंचांग गणना",
-    "mr": "• अचूक गाव/शहर ओळखीसह सुधारित GPS स्थान\n• स्मार्ट शोध आणि निवडीसह सुधारित शहर निवडक\n• नवीन वापरकर्त्यांसाठी सोपी ऑनबोर्डिंग\n• तुमच्या अचूक स्थानासाठी परिष्कृत पंचांग गणना"
+    "en": "• \"Made by Aniket Akal\" branding on Home Screen footer\n• Developer credit on Onboarding screen for new users\n• Enhanced premium credit card in Settings with gradient design\n• \"by Aniket Akal\" watermark on bottom navigation\n• Share App message now credits Aniket Akal with Instagram handle",
+    "hi": "• होम स्क्रीन पर \"Aniket Akal द्वारा निर्मित\" फुटर\n• नए उपयोगकर्ताओं के लिए ऑनबोर्डिंग में डेवलपर क्रेडिट\n• सेटिंग्स में ग्रेडिएंट डिज़ाइन के साथ प्रीमियम क्रेडिट कार्ड\n• बॉटम नेविगेशन में \"by Aniket Akal\" वॉटरमार्क\n• शेयर ऐप संदेश में Aniket Akal का Instagram हैंडल",
+    "mr": "• होम स्क्रीनवर \"Aniket Akal ने बनवले\" फुटर\n• नवीन वापरकर्त्यांसाठी ऑनबोर्डिंगमध्ये डेव्हलपर क्रेडिट\n• सेटिंग्जमध्ये ग्रेडिएंट डिझाइनसह प्रीमियम क्रेडिट कार्ड\n• बॉटम नॅव्हिगेशनमध्ये \"by Aniket Akal\" वॉटरमार्क\n• शेअर अ‍ॅप संदेशात Aniket Akal चे Instagram हँडल"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.3.1",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.3.1/app-release.apk",
-  "publishedDate": "2026-09-30"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.4.0",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.4.0/app-release.apk",
+  "publishedDate": "2026-10-01"
 }

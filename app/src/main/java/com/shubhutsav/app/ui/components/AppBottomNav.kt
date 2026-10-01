@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,55 +57,70 @@ fun AppBottomNav(
         modifier = Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 4.dp)
+            .padding(start = 20.dp, end = 20.dp, bottom = 10.dp, top = 4.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        Surface(
-            shape = RoundedCornerShape(32.dp),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 18.dp,
-            tonalElevation = 2.dp,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+            Surface(
+                shape = RoundedCornerShape(32.dp),
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 18.dp,
+                tonalElevation = 2.dp,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                IslandNavItem(
-                    selected = selected == AppDest.Home,
-                    selectedIcon = Icons.Filled.Home,
-                    unselectedIcon = Icons.Outlined.Home,
-                    label = when (language) {
-                        "mr", "hi" -> "मुख्य"
-                        else -> "Home"
-                    },
-                    onClick = onHome
-                )
-                IslandNavItem(
-                    selected = selected == AppDest.Calendar,
-                    selectedIcon = Icons.Filled.CalendarMonth,
-                    unselectedIcon = Icons.Outlined.CalendarMonth,
-                    label = when (language) {
-                        "mr" -> "कॅलेंडर"
-                        "hi" -> "कैलेंडर"
-                        else -> "Calendar"
-                    },
-                    onClick = onCalendar
-                )
-                IslandNavItem(
-                    selected = selected == AppDest.Settings,
-                    selectedIcon = Icons.Filled.Settings,
-                    unselectedIcon = Icons.Outlined.Settings,
-                    label = when (language) {
-                        "mr" -> "सेटिंग्ज"
-                        "hi" -> "सेटिंग्स"
-                        else -> "Settings"
-                    },
-                    onClick = onSettings
-                )
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IslandNavItem(
+                        selected = selected == AppDest.Home,
+                        selectedIcon = Icons.Filled.Home,
+                        unselectedIcon = Icons.Outlined.Home,
+                        label = when (language) {
+                            "mr", "hi" -> "मुख्य"
+                            else -> "Home"
+                        },
+                        onClick = onHome
+                    )
+                    IslandNavItem(
+                        selected = selected == AppDest.Calendar,
+                        selectedIcon = Icons.Filled.CalendarMonth,
+                        unselectedIcon = Icons.Outlined.CalendarMonth,
+                        label = when (language) {
+                            "mr" -> "कॅलेंडर"
+                            "hi" -> "कैलेंडर"
+                            else -> "Calendar"
+                        },
+                        onClick = onCalendar
+                    )
+                    IslandNavItem(
+                        selected = selected == AppDest.Settings,
+                        selectedIcon = Icons.Filled.Settings,
+                        unselectedIcon = Icons.Outlined.Settings,
+                        label = when (language) {
+                            "mr" -> "सेटिंग्ज"
+                            "hi" -> "सेटिंग्स"
+                            else -> "Settings"
+                        },
+                        onClick = onSettings
+                    )
+                }
             }
+
+            // Subtle developer watermark below nav
+            Text(
+                text = "by Aniket Akal",
+                fontSize = 8.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f),
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(top = 3.dp)
+            )
         }
     }
 }

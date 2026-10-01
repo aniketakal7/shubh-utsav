@@ -529,6 +529,52 @@ fun OnboardingScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Developer Branding on Onboarding
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 60.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                )
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = when (selectedLanguage) {
+                            "mr" -> "विकसित केले: "
+                            "hi" -> "विकसित किया: "
+                            else -> "Developed by "
+                        },
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
+                    Text(
+                        text = "Aniket Akal",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RoyalMaroon
+                    )
+                    Text(
+                        text = " ❤\uFE0F",
+                        fontSize = 12.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "📸 @mr_aniket_akal",
+                    fontSize = 11.sp,
+                    color = KesariyaSaffron.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }

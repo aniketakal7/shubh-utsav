@@ -884,9 +884,14 @@ fun SettingsScreen(
                     ) {
                         OutlinedButton(
                             onClick = {
-                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                val shareText = when (language) {
+                                        "mr" -> "🪔 शुभ उत्सव — सण, दैनिक पंचांग आणि गृह-पूजेसाठी सर्वोत्तम अ‍ॅप!\n\nAniket Akal ने बनवलेले\n📸 Instagram: @mr_aniket_akal\n\nडाउनलोड करा आणि आनंद घ्या!"
+                                        "hi" -> "🪔 शुभ उत्सव — त्योहारों, दैनिक पंचांग और गृह-पूजा का सबसे बेहतरीन ऐप!\n\nAniket Akal द्वारा निर्मित\n📸 Instagram: @mr_aniket_akal\n\nडाउनलोड करें और आनंद लें!"
+                                        else -> "🪔 Shubh Utsav — The best app for festivals, daily panchang & home pujas!\n\nCreated by Aniket Akal\n📸 Instagram: @mr_aniket_akal\n\nDownload now and celebrate with confidence!"
+                                    }
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                     type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, "Celebrate festivals and perform pujas with complete peace of mind! Download Shubh Utsav app.")
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
                                 }
                                 context.startActivity(Intent.createChooser(shareIntent, "Share App"))
                             },
@@ -931,88 +936,109 @@ fun SettingsScreen(
                 }
             }
 
-            // Developer Credit Card — "Made by Aniket Akal"
+            // Developer Credit Card — "Made by Aniket Akal" (Enhanced Premium Design)
             Card(
-                shape = RoundedCornerShape(22.dp),
+                shape = RoundedCornerShape(26.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = RoyalMaroon.copy(alpha = 0.08f)
+                    containerColor = Color.Transparent
                 ),
                 border = BorderStroke(
-                    1.dp,
-                    VedicGold.copy(alpha = 0.4f)
+                    2.dp,
+                    VedicGold.copy(alpha = 0.7f)
                 ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .background(PanchangCardGradient)
                 ) {
-                    Text(
-                        text = when (language) {
-                            "mr" -> "❤\uFE0F ने बनवले"
-                            "hi" -> "❤\uFE0F से बनाया"
-                            else -> "Crafted with ❤\uFE0F by"
-                        },
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "Aniket Akal",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = RoyalMaroon
-                    )
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    Text(
-                        text = when (language) {
-                            "mr" -> "विकासक आणि निर्माता"
-                            "hi" -> "डेवलपर एवं निर्माता"
-                            else -> "Developer & Creator"
-                        },
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    Button(
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr_aniket_akal/"))
-                            context.startActivity(intent)
-                        },
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFE1306C)
-                        ),
-                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        // Decorative diya emoji
+                        Text(text = "🪔", fontSize = 32.sp)
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
                         Text(
-                            text = "📸  @mr_aniket_akal",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            text = when (language) {
+                                "mr" -> "❤\uFE0F ने बनवले"
+                                "hi" -> "❤\uFE0F से बनाया"
+                                else -> "Crafted with ❤\uFE0F by"
+                            },
+                            fontSize = 13.sp,
+                            color = VedicGoldLight,
+                            fontWeight = FontWeight.Medium
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
+                            text = "Aniket Akal",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = VedicGold.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "विकासक आणि निर्माता"
+                                    "hi" -> "डेवलपर एवं निर्माता"
+                                    else -> "Developer & Creator"
+                                },
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = VedicGoldLight,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(18.dp))
+
+                        Button(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr_aniket_akal/"))
+                                context.startActivity(intent)
+                            },
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFE1306C)
+                            ),
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+                            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = "📸  @mr_aniket_akal",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = when (language) {
+                                "mr" -> "इंस्टाग्रामवर फॉलो करा 🙏"
+                                "hi" -> "इंस्टाग्राम पर फॉलो करें 🙏"
+                                else -> "Follow on Instagram 🙏"
+                            },
+                            fontSize = 12.sp,
+                            color = VedicGoldLight.copy(alpha = 0.8f),
+                            fontWeight = FontWeight.Medium
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Text(
-                        text = when (language) {
-                            "mr" -> "इंस्टाग्रामवर फॉलो करा 🙏"
-                            "hi" -> "इंस्टाग्राम पर फॉलो करें 🙏"
-                            else -> "Follow on Instagram 🙏"
-                        },
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
 

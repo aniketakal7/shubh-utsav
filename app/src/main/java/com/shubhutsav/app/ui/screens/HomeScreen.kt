@@ -322,6 +322,40 @@ fun HomeScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
+
+            // Developer Branding Footer — "Made by Aniket Akal"
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 40.dp),
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = when (language) {
+                            "mr" -> "❤\uFE0F ने बनवले — Aniket Akal"
+                            "hi" -> "❤\uFE0F से बनाया — Aniket Akal"
+                            else -> "Made with ❤\uFE0F by Aniket Akal"
+                        },
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "📸 @mr_aniket_akal",
+                        fontSize = 11.sp,
+                        color = KesariyaSaffron.copy(alpha = 0.8f),
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
         }
     }
 }
