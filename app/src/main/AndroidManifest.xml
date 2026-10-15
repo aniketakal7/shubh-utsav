@@ -35,5 +35,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!-- Home Screen Panchang Widget -->
+        <receiver
+            android:name=".widget.PanchangWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/panchang_widget_info" />
+        </receiver>
     </application>
 </manifest>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <!-- Header: Sacred App Title & City -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="✨ शुभ उत्सव • पंचांग"
+            android:textColor="#FFD700"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="दिल्ली"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Main Tithi & Paksha Headline -->
+    <TextView
+        android:id="@+id/widget_tithi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="कार्तिक शुक्ल पक्ष • एकादशी"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <!-- Nakshatra & Gregorian Date -->
+    <TextView
+        android:id="@+id/widget_date_nakshatra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="अश्विनी नक्षत्र • 15 Oct 2026"
+        android:textColor="#E0E0E0"
+        android:textSize="11sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginVertical="6dp"
+        android:background="#44FFD700" />
+
+    <!-- Two-column Timings Grid -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Column 1: Sunrise & Sunset -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_sun_times"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="☀️ 06:22 AM  •  🌙 06:14 PM"
+                android:textColor="#FFFFFF"
+                android:textSize="10.5sp" />
+
+            <TextView
+                android:id="@+id/widget_muhurat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="✨ अभिजित: 11:45 AM – 12:35 PM"
+                android:textColor="#A5D6A7"
+                android:textSize="10.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Column 2: Rahu Kaal -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/widget_rahu_kaal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="राहुकाल: 01:30 – 03:00 PM"
+                android:textColor="#FFCDD2"
+                android:textSize="10.5sp" />
+
+            <TextView
+                android:id="@+id/widget_choghadiya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="अमृत (शुभ मुहूर्त)"
+                android:textColor="#FFF59D"
+                android:textSize="10.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

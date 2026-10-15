@@ -45,6 +45,7 @@ fun PanchangCard(
     isHindi: Boolean = false,
     language: String = if (isHindi) "hi" else "en",
     onChangeCityClick: () -> Unit,
+    onChoghadiyaClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val panchang = remember(city) { PanchangCalculator.calculateForDate(city = city) }
@@ -399,6 +400,37 @@ fun PanchangCard(
                                         color = Color.White,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // Action button to view full 16-slot Choghadiya
+                            Surface(
+                                shape = RoundedCornerShape(10.dp),
+                                color = VedicGold.copy(alpha = 0.2f),
+                                border = BorderStroke(0.8.dp, VedicGoldLight.copy(alpha = 0.4f)),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onChoghadiyaClick() }
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = if (isHindi) "⏱️ आज का संपूर्ण चौघड़िया व दिशा शूल देखें" else "⏱️ View Full Choghadiya & Disha Shool",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = VedicGoldLight
+                                    )
+                                    Text(
+                                        text = "➔",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = VedicGoldLight
                                     )
                                 }
                             }

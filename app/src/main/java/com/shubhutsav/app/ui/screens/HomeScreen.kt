@@ -156,7 +156,8 @@ fun HomeScreen(
                     city = city,
                     isHindi = language != "en",
                     language = language,
-                    onChangeCityClick = { showCityPicker = true }
+                    onChangeCityClick = { showCityPicker = true },
+                    onChoghadiyaClick = { navController.navigate("choghadiya") }
                 )
             }
 
@@ -188,6 +189,118 @@ fun HomeScreen(
                             onClick = { navController.navigate("festival/${festival.id}") }
                         )
                     }
+                }
+            }
+
+            // Sacred Puja & Sadhana Utilities Section
+            item {
+                SectionHeader(
+                    emoji = "🪔",
+                    title = when (language) {
+                        "mr" -> "दैनिक साधना व पूजा साधन"
+                        "hi" -> "दैनिक साधना एवं पूजा साधन"
+                        else -> "Sacred Sadhana & Puja Utilities"
+                    }
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Row 1: Japa Mala & Aarti Player
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        HomeActionCard(
+                            icon = "📿",
+                            title = when (language) {
+                                "mr" -> "डिजिटल जप माळ"
+                                "hi" -> "डिजिटल जप माला"
+                                else -> "Sacred Japa Mala"
+                            },
+                            subtitle = when (language) {
+                                "mr" -> "१०८ मणी, स्पर्श व मंत्र जप"
+                                "hi" -> "108 मनके, स्पर्श व मंत्र जाप"
+                                else -> "108 Beads & Vedic Mantras"
+                            },
+                            accentColor = KesariyaSaffron,
+                            modifier = Modifier.weight(1f),
+                            onClick = { navController.navigate("japamala") }
+                        )
+
+                        HomeActionCard(
+                            icon = "🎵",
+                            title = when (language) {
+                                "mr" -> "आरती व चालीसा"
+                                "hi" -> "आरती एवं चालीसा"
+                                else -> "Aarti Player"
+                            },
+                            subtitle = when (language) {
+                                "mr" -> "घंटी व शंखनाद, कराओके बोल"
+                                "hi" -> "घंटी व शंखनाद, बोल सहित"
+                                else -> "Bell, Conch & Sync Lyrics"
+                            },
+                            accentColor = RoyalMaroon,
+                            modifier = Modifier.weight(1f),
+                            onClick = { navController.navigate("aarti") }
+                        )
+                    }
+
+                    // Row 2: Choghadiya & Vrat Katha
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        HomeActionCard(
+                            icon = "⏱️",
+                            title = when (language) {
+                                "mr" -> "दैनिक चौघडिया"
+                                "hi" -> "दैनिक चौघड़िया"
+                                else -> "Choghadiya"
+                            },
+                            subtitle = when (language) {
+                                "mr" -> "शुभ-अशुभ मुहूर्त व दिशा शूल"
+                                "hi" -> "शुभ-अशुभ मुहूर्त व दिशा शूल"
+                                else -> "Day & Night Muhurats"
+                            },
+                            accentColor = VedicGold,
+                            modifier = Modifier.weight(1f),
+                            onClick = { navController.navigate("choghadiya") }
+                        )
+
+                        HomeActionCard(
+                            icon = "📖",
+                            title = when (language) {
+                                "mr" -> "व्रत कथा व पारण"
+                                "hi" -> "व्रत कथा एवं पारण"
+                                else -> "Vrat & Parana"
+                            },
+                            subtitle = when (language) {
+                                "mr" -> "एकादशी, प्रदोष व फलाहार"
+                                "hi" -> "एकादशी, प्रदोष व फलाहार"
+                                else -> "Fasting Rules & Parana"
+                            },
+                            accentColor = Color(0xFF2E7D32),
+                            modifier = Modifier.weight(1f),
+                            onClick = { navController.navigate("vrat_katha") }
+                        )
+                    }
+
+                    // Row 3: Festive Greeting Card Maker
+                    HomeActionCard(
+                        icon = "🎨",
+                        title = when (language) {
+                            "mr" -> "उत्सव शुभेच्छा कार्ड मेकर"
+                            "hi" -> "त्योहार शुभकामना कार्ड मेकर"
+                            else -> "Festive Card & Status Maker"
+                        },
+                        subtitle = when (language) {
+                            "mr" -> "स्वतःचे नाव जोडून व्हॉट्सअ‍ॅपवर सुंदर फोटो कार्ड शेअर करा"
+                            "hi" -> "अपना व परिवार का नाम जोड़कर व्हाट्सएप पर सुंदर फोटो कार्ड साझा करें"
+                            else -> "Personalize greetings with family name & share to WhatsApp Status"
+                        },
+                        accentColor = Color(0xFFE52D27),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { navController.navigate("greetings") }
+                    )
                 }
             }
 

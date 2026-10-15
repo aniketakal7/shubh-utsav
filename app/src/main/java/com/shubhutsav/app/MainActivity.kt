@@ -250,6 +250,57 @@ fun ShubhUtsavApp() {
                         }
                     )
                 }
+
+                // Digital Japa Mala Screen
+                composable("japamala") {
+                    JapaMalaScreen(
+                        navController = navController,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
+
+                // Aarti & Chalisa Player Screen
+                composable("aarti") {
+                    AartiPlayerScreen(
+                        navController = navController,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
+
+                // Choghadiya Screen
+                composable("choghadiya") {
+                    ChoghadiyaScreen(
+                        navController = navController,
+                        city = currentLocation,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
+
+                // Vrat Katha & Parana Screen
+                composable("vrat_katha") {
+                    VratKathaScreen(
+                        navController = navController,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
+
+                // Festive Greetings Maker Screen
+                composable("greetings") {
+                    GreetingsMakerScreen(
+                        navController = navController,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
             }
 
             // In-App Update Dialog

@@ -225,4 +225,36 @@ class PreferencesManager(context: Context) {
         }
         editor.apply()
     }
+
+    // --- Japa Mala Preferences ---
+    var japaTotalMalas: Int
+        get() = prefs.getInt("japa_total_malas", 0)
+        set(value) = prefs.edit().putInt("japa_total_malas", value).apply()
+
+    var japaTotalChants: Int
+        get() = prefs.getInt("japa_total_chants", 0)
+        set(value) = prefs.edit().putInt("japa_total_chants", value).apply()
+
+    var japaSelectedMantraId: String
+        get() = prefs.getString("japa_selected_mantra_id", "om_namah_shivaya") ?: "om_namah_shivaya"
+        set(value) = prefs.edit().putString("japa_selected_mantra_id", value).apply()
+
+    var japaTargetMalas: Int
+        get() = prefs.getInt("japa_target_malas", 1)
+        set(value) = prefs.edit().putInt("japa_target_malas", value).apply()
+
+    var japaSoundEnabled: Boolean
+        get() = prefs.getBoolean("japa_sound_enabled", true)
+        set(value) = prefs.edit().putBoolean("japa_sound_enabled", value).apply()
+
+    var japaHapticsEnabled: Boolean
+        get() = prefs.getBoolean("japa_haptics_enabled", true)
+        set(value) = prefs.edit().putBoolean("japa_haptics_enabled", value).apply()
+
+    fun recordMalaCompleted(chantsCount: Int) {
+        val editor = prefs.edit()
+        editor.putInt("japa_total_malas", japaTotalMalas + 1)
+        editor.putInt("japa_total_chants", japaTotalChants + chantsCount)
+        editor.apply()
+    }
 }

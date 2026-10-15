@@ -1,20 +1,19 @@
 {
-  "latestVersionCode": 8,
-  "latestVersionName": "1.4.1",
+  "latestVersionCode": 9,
+  "latestVersionName": "1.5.0",
   "minSupportedVersionCode": 6,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.4.1 — Smoother Navigation! ✨",
-    "hi": "शुभ उत्सव 1.4.1 — स्मूथ नेविगेशन! ✨",
-    "mr": "शुभ उत्सव १.४.१ — स्मूथ नॅव्हिगेशन! ✨"
+    "en": "Shubh Utsav 1.5.0 — Sacred Sadhana & Puja Suite! ✨",
+    "hi": "शुभ उत्सव 1.5.0 — दैनिक साधना एवं संपूर्ण पूजा साधन! ✨",
+    "mr": "शुभ उत्सव १.५.० — दैनिक साधना व पूजा साधन! ✨"
   },
   "releaseNotes": {
-    "en": "• Smoother bottom navigation with spring-based animations\n• Added ripple touch feedback on nav buttons\n• Icon scale bounce effect on tab selection\n• Animated label expand/collapse with fade transitions\n• Overall snappier and more responsive navigation feel",
-    "hi": "• स्प्रिंग-आधारित एनिमेशन के साथ स्मूथ बॉटम नेविगेशन\n• नेव बटन पर रिपल टच फीडबैक जोड़ा\n• टैब चयन पर आइकन स्केल बाउंस इफेक्ट\n• फेड ट्रांज़िशन के साथ एनिमेटेड लेबल\n• समग्र रूप से तेज़ और अधिक रेस्पॉन्सिव नेविगेशन",
-    "mr": "• स्प्रिंग-आधारित अ‍ॅनिमेशनसह स्मूथ बॉटम नॅव्हिगेशन\n• नॅव्ह बटणांवर रिपल टच फीडबॅक जोडला\n• टॅब निवडीवर आयकॉन स्केल बाउंस इफेक्ट\n• फेड ट्रांझिशनसह अ‍ॅनिमेटेड लेबल\n• एकूणच जलद आणि अधिक रिस्पॉन्सिव्ह नॅव्हिगेशन"
+    "en": "• 📿 Digital Japa Mala: 108 Rudraksha bead counter, tactile vibration & 8 Vedic mantras\n• 🎵 Sacred Aarti & Chalisa Player with synchronised karaoke lyrics, swinging Temple Bell & Conch (शंखनाद)\n• ⏱️ Choghadiya Timings: 16 Day & Night Muhurats with live active indicator & Disha Shool\n• 📖 Vrat Katha & Parana Guide: Ekadashi, Pradosh, Fasting foods & resizable sacred stories\n• 📱 Home Screen Widget: Real-time Panchang, Tithi, Nakshatra & Muhurat right on your phone\n• 🎨 Festive Greeting Card Maker: Personalize with family name & share to WhatsApp status\n• 🚀 Google Play publishing optimizations & bundle support",
+    "hi": "• 📿 डिजिटल जप माला: 108 मनके, स्पर्श कंपन और 8 पावन वैदिक मंत्र\n• 🎵 आरती व चालीसा कक्ष: बोल सहित कराओके, मंदिर की घंटी और शंखनाद\n• ⏱️ दैनिक चौघड़िया: 16 दिन व रात के मुहूर्त, वर्तमान लाइव सूचक और दिशा शूल निवारण\n• 📖 व्रत कथा एवं पारण: एकादशी, प्रदोष, फलाहार नियम और कथा पाठ\n• 📱 होम स्क्रीन विजेट: आज का पंचांग, तिथि, नक्षत्र व मुहूर्त फोन स्क्रीन पर\n• 🎨 त्योहार शुभकामना कार्ड मेकर: परिवार का नाम जोड़ें और व्हाट्सएप पर साझा करें\n• 🚀 गूगल प्ले स्टोर प्रकाशन तैयारी एवं परफॉर्मेंस सुधार",
+    "mr": "• 📿 डिजिटल जप माळ: १०८ मणी, व्हायब्रेशन व ८ वैदिक मंत्र\n• 🎵 आरती व चालीसा कक्ष: कराओके बोल, मंदिराची घंटी व शंखनाद\n• ⏱️ दैनिक चौघडिया: १६ दिवस व रात्र मुहूर्त, चालू मुहूर्त व दिशा शूल\n• 📖 व्रत कथा व पारण: एकादशी, प्रदोष, उपवास नियम व कथा वाचन\n• 📱 होम स्क्रीन विजेट: फोन स्क्रीनवर थेट दैनिक पंचांग व तिथी\n• 🎨 सण शुभेच्छा कार्ड मेकर: स्वतःचे नाव जोडून व्हॉट्सअ‍ॅपवर शेअर करा\n• 🚀 गुगल प्ले स्टोअर पब्लिशिंग तयारी व कार्यक्षमता सुधारणा"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.4.1",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.4.1/app-release.apk",
-  "publishedDate": "2026-10-01"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.0",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.0/app-release.apk",
+  "publishedDate": "2026-10-15"
 }
-

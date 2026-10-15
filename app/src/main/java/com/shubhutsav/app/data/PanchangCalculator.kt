@@ -29,6 +29,43 @@ data class PanchangDay(
     val amritKaal: String
 )
 
+enum class ChoghadiyaType(
+    val nameEn: String,
+    val nameHi: String,
+    val nameMr: String,
+    val isAuspicious: Boolean,
+    val qualityEn: String,
+    val qualityHi: String,
+    val qualityMr: String
+) {
+    AMRIT("Amrit", "अमृत", "अमृत", true, "Best / Nectar", "सर्वोत्तम (अमृत समान)", "सर्वोत्तम (अमृततुल्य)"),
+    SHUBH("Shubh", "शुभ", "शुभ", true, "Auspicious", "उत्तम (शुभ व मंगल)", "शुभ व मंगलकारी"),
+    LABH("Labh", "लाभ", "लाभ", true, "Prosperous / Gain", "लाभकारी (उन्नतिदायक)", "फायदेशीर (उन्नती)"),
+    CHAR("Char", "चर", "चर", true, "Neutral / Travel", "सामान्य (यात्रा हेतु शुभ)", "सामान्य (प्रवासासाठी उत्तम)"),
+    ROG("Rog", "रोग", "रोग", false, "Inauspicious / Illness", "अशुभ (रोगकारक)", "अशुभ (रोगास कारणीभूत)"),
+    KAAL("Kaal", "काल", "काल", false, "Harmful / Loss", "हानिकारक (हानिप्रद)", "नुकसानकारक (अशुभ)"),
+    UDVEG("Udveg", "उद्वेग", "उद्वेग", false, "Anxiety / Worry", "चिंताजनक (कलहकारी)", "काळजी / क्लेशकारक")
+}
+
+data class ChoghadiyaSlot(
+    val type: ChoghadiyaType,
+    val startTime: String,
+    val endTime: String,
+    val startMinutes: Int,
+    val endMinutes: Int,
+    val isDay: Boolean,
+    val isCurrent: Boolean = false
+)
+
+data class DishaShoolInfo(
+    val directionEn: String,
+    val directionHi: String,
+    val directionMr: String,
+    val remedyEn: String,
+    val remedyHi: String,
+    val remedyMr: String
+)
+
 object PanchangCalculator {
 
     private val tithiNamesEn = listOf(
@@ -344,6 +381,170 @@ object PanchangCalculator {
         return when (month) {
             1 -> "जनवरी"; 2 -> "फ़रवरी"; 3 -> "मार्च"; 4 -> "अप्रैल"; 5 -> "मई"; 6 -> "जून"
             7 -> "जुलाई"; 8 -> "अगस्त"; 9 -> "सितंबर"; 10 -> "अक्टूबर"; 11 -> "नवंबर"; else -> "दिसंबर"
+        }
+    }
+
+    /**
+     * Calculates 8 Day Choghadiya and 8 Night Choghadiya slots for given City and Date
+     */
+    fun calculateChoghadiya(
+        city: City = CityRepository.cities.first(),
+        calendar: Calendar = Calendar.getInstance()
+    ): List<ChoghadiyaSlot> {
+        val lat = city.latitude
+        val lon = city.longitude
+        val dayOfYear = calendar.get(Calendar.DAY_OF_YEAR)
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
+        val b = 2.0 * Math.PI * (dayOfYear - 81) / 365.0
+        val eot = 9.87 * sin(2 * b) - 7.53 * cos(b) - 1.5 * sin(b)
+        val timeZoneOffsetHours = 5.5
+        val solarNoonMinutes = 720.0 - (lon * 4.0) - eot + (timeZoneOffsetHours * 60.0)
+        val declination = 23.45 * sin(2.0 * Math.PI * (284 + dayOfYear) / 365.0)
+
+        val phi = Math.toRadians(lat)
+        val delta = Math.toRadians(declination)
+        val cosHourAngle = (sin(Math.toRadians(-0.833)) - sin(phi) * sin(delta)) / (cos(phi) * cos(delta))
+        val hourAngleDeg = Math.toDegrees(acos(cosHourAngle.coerceIn(-1.0, 1.0)))
+        val halfDayMinutes = hourAngleDeg * 4.0
+
+        val sunriseMinutes = (solarNoonMinutes - halfDayMinutes).roundToInt()
+        val sunsetMinutes = (solarNoonMinutes + halfDayMinutes).roundToInt()
+        val dayDuration = sunsetMinutes - sunriseMinutes
+        val dayPart = dayDuration / 8.0
+
+        val nextDaySunriseMinutes = sunriseMinutes + 1440
+        val nightDuration = nextDaySunriseMinutes - sunsetMinutes
+        val nightPart = nightDuration / 8.0
+
+        val currentMinutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
+
+        val dayOrders = mapOf(
+            Calendar.SUNDAY to listOf(ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR, ChoghadiyaType.LABH, ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH, ChoghadiyaType.ROG, ChoghadiyaType.UDVEG),
+            Calendar.MONDAY to listOf(ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH, ChoghadiyaType.ROG, ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR, ChoghadiyaType.LABH, ChoghadiyaType.AMRIT),
+            Calendar.TUESDAY to listOf(ChoghadiyaType.ROG, ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR, ChoghadiyaType.LABH, ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH, ChoghadiyaType.ROG),
+            Calendar.WEDNESDAY to listOf(ChoghadiyaType.LABH, ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH, ChoghadiyaType.ROG, ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR, ChoghadiyaType.LABH),
+            Calendar.THURSDAY to listOf(ChoghadiyaType.SHUBH, ChoghadiyaType.ROG, ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR, ChoghadiyaType.LABH, ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH),
+            Calendar.FRIDAY to listOf(ChoghadiyaType.CHAR, ChoghadiyaType.LABH, ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH, ChoghadiyaType.ROG, ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR),
+            Calendar.SATURDAY to listOf(ChoghadiyaType.KAAL, ChoghadiyaType.SHUBH, ChoghadiyaType.ROG, ChoghadiyaType.UDVEG, ChoghadiyaType.CHAR, ChoghadiyaType.LABH, ChoghadiyaType.AMRIT, ChoghadiyaType.KAAL)
+        )
+
+        val nightOrders = mapOf(
+            Calendar.SUNDAY to listOf(ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR, ChoghadiyaType.ROG, ChoghadiyaType.KAAL, ChoghadiyaType.LABH, ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH),
+            Calendar.MONDAY to listOf(ChoghadiyaType.CHAR, ChoghadiyaType.ROG, ChoghadiyaType.KAAL, ChoghadiyaType.LABH, ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR),
+            Calendar.TUESDAY to listOf(ChoghadiyaType.KAAL, ChoghadiyaType.LABH, ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR, ChoghadiyaType.ROG, ChoghadiyaType.KAAL),
+            Calendar.WEDNESDAY to listOf(ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR, ChoghadiyaType.ROG, ChoghadiyaType.KAAL, ChoghadiyaType.LABH, ChoghadiyaType.UDVEG),
+            Calendar.THURSDAY to listOf(ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR, ChoghadiyaType.ROG, ChoghadiyaType.KAAL, ChoghadiyaType.LABH, ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT),
+            Calendar.FRIDAY to listOf(ChoghadiyaType.ROG, ChoghadiyaType.KAAL, ChoghadiyaType.LABH, ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR, ChoghadiyaType.ROG),
+            Calendar.SATURDAY to listOf(ChoghadiyaType.LABH, ChoghadiyaType.UDVEG, ChoghadiyaType.SHUBH, ChoghadiyaType.AMRIT, ChoghadiyaType.CHAR, ChoghadiyaType.ROG, ChoghadiyaType.KAAL, ChoghadiyaType.LABH)
+        )
+
+        val dayTypes = dayOrders[dayOfWeek] ?: dayOrders[Calendar.SUNDAY]!!
+        val nightTypes = nightOrders[dayOfWeek] ?: nightOrders[Calendar.SUNDAY]!!
+
+        val slots = mutableListOf<ChoghadiyaSlot>()
+
+        // 8 Day Slots
+        for (i in 0 until 8) {
+            val startMin = (sunriseMinutes + i * dayPart).roundToInt()
+            val endMin = (sunriseMinutes + (i + 1) * dayPart).roundToInt()
+            val isCurrent = currentMinutes in startMin until endMin
+            slots.add(
+                ChoghadiyaSlot(
+                    type = dayTypes[i],
+                    startTime = formatTimeFromMinutes(startMin),
+                    endTime = formatTimeFromMinutes(endMin),
+                    startMinutes = startMin,
+                    endMinutes = endMin,
+                    isDay = true,
+                    isCurrent = isCurrent
+                )
+            )
+        }
+
+        // 8 Night Slots
+        for (i in 0 until 8) {
+            val startMin = (sunsetMinutes + i * nightPart).roundToInt()
+            val endMin = (sunsetMinutes + (i + 1) * nightPart).roundToInt()
+            val normalizedCurrent = if (currentMinutes < sunriseMinutes) currentMinutes + 1440 else currentMinutes
+            val isCurrent = normalizedCurrent in startMin until endMin
+            slots.add(
+                ChoghadiyaSlot(
+                    type = nightTypes[i],
+                    startTime = formatTimeFromMinutes(startMin),
+                    endTime = formatTimeFromMinutes(endMin),
+                    startMinutes = startMin,
+                    endMinutes = endMin,
+                    isDay = false,
+                    isCurrent = isCurrent
+                )
+            )
+        }
+
+        return slots
+    }
+
+    /**
+     * Determines Disha Shool (prohibited travel direction) and traditional Vedic remedy
+     */
+    fun getDishaShool(calendar: Calendar = Calendar.getInstance()): DishaShoolInfo {
+        return when (calendar.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.SUNDAY -> DishaShoolInfo(
+                directionEn = "West",
+                directionHi = "पश्चिम दिशा",
+                directionMr = "पश्चिम दिशा",
+                remedyEn = "Consume porridge (daliya) or ghee with betel leaf before travel",
+                remedyHi = "दलिया, घी या पान खाकर यात्रा प्रारंभ करें",
+                remedyMr = "दलिया, तूप किंवा पान खाऊन प्रवास सुरू करावा"
+            )
+            Calendar.MONDAY -> DishaShoolInfo(
+                directionEn = "East",
+                directionHi = "पूर्व दिशा",
+                directionMr = "पूर्व दिशा",
+                remedyEn = "Look into a mirror or drink milk before stepping out",
+                remedyHi = "दर्पण देखकर अथवा दूध पीकर प्रस्थान करें",
+                remedyMr = "आरशात पाहून किंवा दूध पिऊन प्रस्थान करावे"
+            )
+            Calendar.TUESDAY -> DishaShoolInfo(
+                directionEn = "North",
+                directionHi = "उत्तर दिशा",
+                directionMr = "उत्तर दिशा",
+                remedyEn = "Consume organic jaggery (gud) before stepping out",
+                remedyHi = "गुड़ खाकर यात्रा पर निकलें",
+                remedyMr = "गूळ खाऊन प्रवासाला निघावे"
+            )
+            Calendar.WEDNESDAY -> DishaShoolInfo(
+                directionEn = "North",
+                directionHi = "उत्तर दिशा",
+                directionMr = "उत्तर दिशा",
+                remedyEn = "Consume coriander seeds (dhaniya) or sesame seeds before travel",
+                remedyHi = "धनिया अथवा तिल खाकर प्रस्थान करें",
+                remedyMr = "धने किंवा तीळ खाऊन प्रवास करावा"
+            )
+            Calendar.THURSDAY -> DishaShoolInfo(
+                directionEn = "South",
+                directionHi = "दक्षिण दिशा",
+                directionMr = "दक्षिण दिशा",
+                remedyEn = "Eat fresh curd (dahi) or yellow sweets before travel",
+                remedyHi = "दही अथवा पीली मिठाई खाकर निकलें",
+                remedyMr = "दही किंवा पिवळी मिठाई खाऊन निघावे"
+            )
+            Calendar.FRIDAY -> DishaShoolInfo(
+                directionEn = "West",
+                directionHi = "पश्चिम दिशा",
+                directionMr = "पश्चिम दिशा",
+                remedyEn = "Consume barley (jau) or mustard seeds before travel",
+                remedyHi = "जौ अथवा राई खाकर यात्रा शुरू करें",
+                remedyMr = "जव किंवा मोहरी खाऊन प्रवास सुरू करावा"
+            )
+            else -> DishaShoolInfo(
+                directionEn = "East",
+                directionHi = "पूर्व दिशा",
+                directionMr = "पूर्व दिशा",
+                remedyEn = "Consume ginger (adrak) or black gram before travel",
+                remedyHi = "अदरक अथवा उड़द खाकर प्रस्थान करें",
+                remedyMr = "आले किंवा उडीद खाऊन प्रवास सुरू करावा"
+            )
         }
     }
 }
