@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 9,
-  "latestVersionName": "1.5.0",
+  "latestVersionCode": 10,
+  "latestVersionName": "1.5.1",
   "minSupportedVersionCode": 6,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.5.0 — Sacred Sadhana & Puja Suite! ✨",
-    "hi": "शुभ उत्सव 1.5.0 — दैनिक साधना एवं संपूर्ण पूजा साधन! ✨",
-    "mr": "शुभ उत्सव १.५.० — दैनिक साधना व पूजा साधन! ✨"
+    "en": "Shubh Utsav 1.5.1 — Hands-Free Puja Mode & Sacred Updates! 🪔",
+    "hi": "शुभ उत्सव 1.5.1 — हैंड्स-फ्री पूजा मोड एवं पावन नवीनता! 🪔",
+    "mr": "शुभ उत्सव १.५.१ — हँड्स-फ्री पूजा मोड व पावन अद्यतने! 🪔"
   },
   "releaseNotes": {
-    "en": "• 📿 Digital Japa Mala: 108 Rudraksha bead counter, tactile vibration & 8 Vedic mantras\n• 🎵 Sacred Aarti & Chalisa Player with synchronised karaoke lyrics, swinging Temple Bell & Conch (शंखनाद)\n• ⏱️ Choghadiya Timings: 16 Day & Night Muhurats with live active indicator & Disha Shool\n• 📖 Vrat Katha & Parana Guide: Ekadashi, Pradosh, Fasting foods & resizable sacred stories\n• 📱 Home Screen Widget: Real-time Panchang, Tithi, Nakshatra & Muhurat right on your phone\n• 🎨 Festive Greeting Card Maker: Personalize with family name & share to WhatsApp status\n• 🚀 Google Play publishing optimizations & bundle support",
-    "hi": "• 📿 डिजिटल जप माला: 108 मनके, स्पर्श कंपन और 8 पावन वैदिक मंत्र\n• 🎵 आरती व चालीसा कक्ष: बोल सहित कराओके, मंदिर की घंटी और शंखनाद\n• ⏱️ दैनिक चौघड़िया: 16 दिन व रात के मुहूर्त, वर्तमान लाइव सूचक और दिशा शूल निवारण\n• 📖 व्रत कथा एवं पारण: एकादशी, प्रदोष, फलाहार नियम और कथा पाठ\n• 📱 होम स्क्रीन विजेट: आज का पंचांग, तिथि, नक्षत्र व मुहूर्त फोन स्क्रीन पर\n• 🎨 त्योहार शुभकामना कार्ड मेकर: परिवार का नाम जोड़ें और व्हाट्सएप पर साझा करें\n• 🚀 गूगल प्ले स्टोर प्रकाशन तैयारी एवं परफॉर्मेंस सुधार",
-    "mr": "• 📿 डिजिटल जप माळ: १०८ मणी, व्हायब्रेशन व ८ वैदिक मंत्र\n• 🎵 आरती व चालीसा कक्ष: कराओके बोल, मंदिराची घंटी व शंखनाद\n• ⏱️ दैनिक चौघडिया: १६ दिवस व रात्र मुहूर्त, चालू मुहूर्त व दिशा शूल\n• 📖 व्रत कथा व पारण: एकादशी, प्रदोष, उपवास नियम व कथा वाचन\n• 📱 होम स्क्रीन विजेट: फोन स्क्रीनवर थेट दैनिक पंचांग व तिथी\n• 🎨 सण शुभेच्छा कार्ड मेकर: स्वतःचे नाव जोडून व्हॉट्सअ‍ॅपवर शेअर करा\n• 🚀 गुगल प्ले स्टोअर पब्लिशिंग तयारी व कार्यक्षमता सुधारणा"
+    "en": "• 🪔 Hands-Free Puja Mode: Screen stays awake, step-by-step TTS voice recitation, giant altar text & temple bell chimes\n• ⏰ Exact Alarms: Timely alerts for Preparation, Shopping & Muhurat with device reboot persistence\n• 📅 Multi-Day Panchang: Browse past & future days with interactive date navigator & live Choghadiya countdown\n• 🎵 Expanded Aartis & Stotras: Added Durga Aarti, Shri Ram Stuti, Ghalin Lotangan, and Shiva Tandava Stotram\n• 🔥 Japa Sadhana Streaks: Milestone goals (1, 3, 5, 11, 21, 108 malas) & daily streak tracker\n• 🎨 Greeting Card 9:16 Stories: Create vertical WhatsApp & Instagram stories with persistent family name\n• 🛍️ Enhanced Shopping: Custom puja items now have persistent checklist states",
+    "hi": "• 🪔 हैंड्स-फ्री पूजा मोड: स्क्रीन हमेशा चालू, बोलकर विधि सुनाने वाला TTS, बड़े अक्षर एवं घंटी नाद\n• ⏰ सटीक अलार्म: पूजा पूर्व तैयारी, खरीदारी व शुभ मुहूर्त के लिए डिवाइस रीस्टार्ट के बाद भी सुरक्षित अलार्म\n• 📅 बहु-दिवसीय पंचांग: बीते व आने वाले दिनों का पंचांग देखें एवं लाइव चौघड़िया टाइमर\n• 🎵 नई आरतियां व स्तोत्र: दुर्गा आरती, श्री राम स्तुति, घालिन लोटांगण एवं शिव तांडव स्तोत्र सम्मिलित\n• 🔥 जप साधना स्ट्रीक: संकल्प लक्ष्य (1, 3, 5, 11, 21, 108 माला) और निरंतरता ट्रैकर\n• 🎨 9:16 स्टोरी ग्रीटिंग कार्ड: व्हाट्सएप और इंस्टाग्राम स्टोरी के लिए फुल-स्क्रीन कार्ड\n• 🛍️ सामग्री चेकलिस्ट: कस्टम पूजा सामग्री के लिए टिक-मार्क व चेकलिस्ट सुधार",
+    "mr": "• 🪔 हँड्स-फ्री पूजा मोड: स्क्रीन सतत चालू, बोलून विधी सांगणारे TTS, ठळक अक्षरे व मंदिराची घंटी\n• ⏰ अचूक अलार्म: पूर्वतयारी, खरेदी आणि शुभ मुहूर्त अलार्म फोन रीस्टार्ट झाल्यावरही चालू राहतील\n• 📅 बहु-दिवसीय पंचांग: मागील व पुढील दिवसांचे पंचांग व लाईव्ह चौघडिया टाइमर\n• 🎵 नवीन आरत्या व स्तोत्रे: दुर्गा आरती, श्री राम स्तुती, घालिन लोटांगण आणि शिव तांडव स्तोत्र\n• 🔥 जप साधना स्ट्रीक: संकल्प ध्येये (१, ३, ५, ११, २१, १०८ माळा) आणि दैनिक सातत्य ट्रॅकर\n• 🎨 ९:१६ स्टोरी शुभेच्छा कार्ड: व्हॉट्सअ‍ॅप व इन्स्टाग्राम स्टोरीसाठी उभ्या आकाराचे कार्ड्स\n• 🛍️ पूजा साहित्य: स्वतः जोडलेल्या साहित्यासाठी टिक-मार्क व ट्रॅकिंग सुविधा"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.0",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.0/app-release.apk",
-  "publishedDate": "2026-10-15"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.1",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.1/app-release.apk",
+  "publishedDate": "2026-10-30"
 }
