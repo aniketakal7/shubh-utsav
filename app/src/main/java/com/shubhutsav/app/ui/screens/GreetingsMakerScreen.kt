@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
+import com.shubhutsav.app.data.PreferencesManager
 import com.shubhutsav.app.ui.components.AppTopBar
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
@@ -205,10 +206,16 @@ fun GreetingsMakerScreen(
         )
     }
 
+    val prefs = remember { PreferencesManager(context) }
     var selectedFestival by remember { mutableStateOf(festivalOptions.first()) }
     var selectedTheme by remember { mutableStateOf(themes.first()) }
-    var senderName by remember { mutableStateOf("अनिकेत अकाल एवं परिवार") }
+    var senderName by remember {
+        mutableStateOf(
+            prefs.greetingSenderName.ifBlank { "अनिकेत अकाल एवं परिवार" }
+        )
+    }
     var wishMessage by remember { mutableStateOf(selectedFestival.defaultWishes.first()) }
+    var isStoryRatio by remember { mutableStateOf(false) } // false = 1:1 Square, true = 9:16 Story / Status
 
     // Update wish message when festival changes
     LaunchedEffect(selectedFestival, language) {
@@ -223,7 +230,7 @@ fun GreetingsMakerScreen(
     fun generateAndShareCard() {
         try {
             val width = 1080
-            val height = 1080
+            val height = if (isStoryRatio) 1920 else 1080
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
@@ -263,12 +270,13 @@ fun GreetingsMakerScreen(
                 textAlign = Paint.Align.CENTER
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
-            canvas.drawText("✨ शुभ उत्सव (Shubh Utsav) ✨", width / 2f, 130f, topBrandPaint)
+            val brandY = if (isStoryRatio) 200f else 130f
+            canvas.drawText("✨ शुभ उत्सव (Shubh Utsav) ✨", width / 2f, brandY, topBrandPaint)
 
             // Festival Emoji & Title
             val titlePaint = Paint().apply {
                 color = android.graphics.Color.WHITE
-                textSize = 66f
+                textSize = if (isStoryRatio) 72f else 66f
                 isAntiAlias = true
                 textAlign = Paint.Align.CENTER
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
@@ -278,7 +286,8 @@ fun GreetingsMakerScreen(
                 "hi" -> selectedFestival.nameHi
                 else -> selectedFestival.nameEn
             }
-            canvas.drawText("${selectedFestival.emoji} $festName ${selectedFestival.emoji}", width / 2f, 250f, titlePaint)
+            val titleY = if (isStoryRatio) 420f else 250f
+            canvas.drawText("${selectedFestival.emoji} $festName ${selectedFestival.emoji}", width / 2f, titleY, titlePaint)
 
             // Gold divider line
             val divPaint = Paint().apply {
@@ -286,12 +295,13 @@ fun GreetingsMakerScreen(
                 strokeWidth = 4f
                 isAntiAlias = true
             }
-            canvas.drawLine(width / 2f - 240f, 300f, width / 2f + 240f, 300f, divPaint)
+            val divY = if (isStoryRatio) 480f else 300f
+            canvas.drawLine(width / 2f - 240f, divY, width / 2f + 240f, divY, divPaint)
 
             // Blessings Text
             val wishPaint = Paint().apply {
                 color = android.graphics.Color.WHITE
-                textSize = 42f
+                textSize = if (isStoryRatio) 46f else 42f
                 isAntiAlias = true
                 textAlign = Paint.Align.CENTER
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
@@ -301,8 +311,9 @@ fun GreetingsMakerScreen(
             val words = wishMessage.split(" ")
             val lines = mutableListOf<String>()
             var currentLine = StringBuilder()
+            val maxLineLen = if (isStoryRatio) 30 else 32
             for (word in words) {
-                if (currentLine.length + word.length > 32) {
+                if (currentLine.length + word.length > maxLineLen) {
                     lines.add(currentLine.toString())
                     currentLine = StringBuilder(word).append(" ")
                 } else {
@@ -311,10 +322,11 @@ fun GreetingsMakerScreen(
             }
             if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
 
-            var startY = 440f
+            var startY = if (isStoryRatio) 720f else 440f
+            val lineSpacing = if (isStoryRatio) 74f else 62f
             for (line in lines) {
                 canvas.drawText(line.trim(), width / 2f, startY, wishPaint)
-                startY += 62f
+                startY += lineSpacing
             }
 
             // Bottom Traditional Signature Box
@@ -322,7 +334,9 @@ fun GreetingsMakerScreen(
                 color = 0x33000000
                 style = Paint.Style.FILL
             }
-            canvas.drawRoundRect(RectF(120f, 820f, width - 120f, 960f), 24f, 24f, sigBgPaint)
+            val sigBoxTop = if (isStoryRatio) 1540f else 820f
+            val sigBoxBottom = if (isStoryRatio) 1740f else 960f
+            canvas.drawRoundRect(RectF(100f, sigBoxTop, width - 100f, sigBoxBottom), 24f, 24f, sigBgPaint)
 
             val sigLabelPaint = Paint().apply {
                 color = 0xFFFFD700.toInt()
@@ -330,7 +344,7 @@ fun GreetingsMakerScreen(
                 isAntiAlias = true
                 textAlign = Paint.Align.CENTER
             }
-            canvas.drawText("शुभकामनाओं सहित :", width / 2f, 870f, sigLabelPaint)
+            canvas.drawText("शुभकामनाओं सहित :", width / 2f, sigBoxTop + 65f, sigLabelPaint)
 
             val sigNamePaint = Paint().apply {
                 color = android.graphics.Color.WHITE
@@ -339,7 +353,7 @@ fun GreetingsMakerScreen(
                 textAlign = Paint.Align.CENTER
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
-            canvas.drawText(senderName, width / 2f, 930f, sigNamePaint)
+            canvas.drawText(senderName, width / 2f, sigBoxTop + 135f, sigNamePaint)
 
             // Save Bitmap to Cache & Share via FileProvider
             val cachePath = File(context.cacheDir, "greetings")
@@ -404,7 +418,7 @@ fun GreetingsMakerScreen(
                     shadowElevation = 12.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(1f)
+                        .aspectRatio(if (isStoryRatio) 9f / 16f else 1f)
                 ) {
                     Box(
                         modifier = Modifier
@@ -490,6 +504,51 @@ fun GreetingsMakerScreen(
                             }
                         }
                     }
+                }
+            }
+
+            // Aspect Ratio Selector (1:1 Square vs 9:16 Story)
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    FilterChip(
+                        selected = !isStoryRatio,
+                        onClick = { isStoryRatio = false },
+                        label = {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "🔲 १:१ चौरस (चॅट / फीड)"
+                                    "hi" -> "🔲 1:1 चौकोर (चैट / फ़ीड)"
+                                    else -> "🔲 1:1 Square (Chat / Feed)"
+                                }
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = KesariyaSaffron,
+                            selectedLabelColor = Color.White
+                        )
+                    )
+                    FilterChip(
+                        selected = isStoryRatio,
+                        onClick = { isStoryRatio = true },
+                        label = {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "📱 ९:१६ स्टेटस (स्टोरी / रील्स)"
+                                    "hi" -> "📱 9:16 स्टेटस (स्टोरी / रील्स)"
+                                    else -> "📱 9:16 Story (Status / Reels)"
+                                }
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = KesariyaSaffron,
+                            selectedLabelColor = Color.White
+                        )
+                    )
                 }
             }
 
@@ -603,7 +662,10 @@ fun GreetingsMakerScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = senderName,
-                    onValueChange = { senderName = it },
+                    onValueChange = {
+                        senderName = it
+                        prefs.greetingSenderName = it
+                    },
                     label = { Text("Name on Card") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),

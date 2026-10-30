@@ -18,6 +18,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,10 +30,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.shubhutsav.app.data.City
 import com.shubhutsav.app.data.CityRepository
 import com.shubhutsav.app.location.LocationHelper
 import com.shubhutsav.app.location.LocationResult
+import com.shubhutsav.app.notifications.FestivalReminderReceiver
 import com.shubhutsav.app.ui.components.CityPickerDialog
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.OnboardingHeroGradient
@@ -95,6 +99,33 @@ fun OnboardingScreen(
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { _ ->
+        // Whether granted or denied, re-schedule reminders and proceed
+        FestivalReminderReceiver.rescheduleAllReminders(context)
+        prefs.hasAskedNotificationPermission = true
+        prefs.saveSelectedLocation(selectedCity)
+        onComplete(selectedLanguage == "hi", selectedCity.id, selectedRitualStyle)
+        onCompleteLanguage(selectedLanguage, selectedCity.id, selectedRitualStyle)
+        onCompleteLocation(selectedLanguage, selectedCity, selectedRitualStyle)
+    }
+
+    fun finishOnboarding() {
+        prefs.saveSelectedLocation(selectedCity)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !prefs.hasAskedNotificationPermission &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            FestivalReminderReceiver.rescheduleAllReminders(context)
+            onComplete(selectedLanguage == "hi", selectedCity.id, selectedRitualStyle)
+            onCompleteLanguage(selectedLanguage, selectedCity.id, selectedRitualStyle)
+            onCompleteLocation(selectedLanguage, selectedCity, selectedRitualStyle)
         }
     }
 
@@ -506,12 +537,7 @@ fun OnboardingScreen(
             Spacer(modifier = Modifier.height(34.dp))
 
             Button(
-                onClick = {
-                    prefs.saveSelectedLocation(selectedCity)
-                    onComplete(selectedLanguage == "hi", selectedCity.id, selectedRitualStyle)
-                    onCompleteLanguage(selectedLanguage, selectedCity.id, selectedRitualStyle)
-                    onCompleteLocation(selectedLanguage, selectedCity, selectedRitualStyle)
-                },
+                onClick = { finishOnboarding() },
                 shape = RoundedCornerShape(22.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = RoyalMaroon),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),

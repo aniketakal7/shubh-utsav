@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.EditLocation
@@ -38,6 +40,9 @@ import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.RoyalMaroonDark
 import com.shubhutsav.app.ui.theme.VedicGold
 import com.shubhutsav.app.ui.theme.VedicGoldLight
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun PanchangCard(
@@ -48,7 +53,13 @@ fun PanchangCard(
     onChoghadiyaClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val panchang = remember(city) { PanchangCalculator.calculateForDate(city = city) }
+    var dayOffset by remember { mutableIntStateOf(0) }
+    val selectedCal = remember(dayOffset) {
+        Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, dayOffset) }
+    }
+    val panchang = remember(city, dayOffset) {
+        PanchangCalculator.calculateForDate(calendar = selectedCal, city = city)
+    }
     var isExpanded by remember { mutableStateOf(false) }
 
     Surface(
@@ -148,7 +159,101 @@ fun PanchangCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Interactive Date Navigation Selector
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = Color.Black.copy(alpha = 0.25f),
+                border = BorderStroke(0.6.dp, VedicGold.copy(alpha = 0.35f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 6.dp, vertical = 3.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { dayOffset -= 1 },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Previous Day",
+                            tint = VedicGoldLight,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { dayOffset = 0 }
+                    ) {
+                        val navDateLabel = when (dayOffset) {
+                            0 -> when (language) {
+                                "mr" -> "आज (Today)"
+                                "hi" -> "आज (Today)"
+                                else -> "Today"
+                            }
+                            -1 -> when (language) {
+                                "mr" -> "काल (Yesterday)"
+                                "hi" -> "कल (Yesterday)"
+                                else -> "Yesterday"
+                            }
+                            1 -> when (language) {
+                                "mr" -> "उद्या (Tomorrow)"
+                                "hi" -> "कल (Tomorrow)"
+                                else -> "Tomorrow"
+                            }
+                            else -> {
+                                val fmt = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                                fmt.format(selectedCal.time)
+                            }
+                        }
+                        Text(
+                            text = "📅 $navDateLabel",
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (dayOffset != 0) {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = KesariyaSaffron
+                            ) {
+                                Text(
+                                    text = when (language) {
+                                        "mr" -> "आज"
+                                        "hi" -> "आज"
+                                        else -> "Today"
+                                    },
+                                    color = Color.White,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    IconButton(
+                        onClick = { dayOffset += 1 },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Next Day",
+                            tint = VedicGoldLight,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Primary Panchang Elements (Tithi, Nakshatra, Day & Month)
             Surface(

@@ -37,9 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.*
+import com.shubhutsav.app.notifications.AlarmScheduler
 import com.shubhutsav.app.notifications.NotificationHelper
 import com.shubhutsav.app.ui.components.AppTopBar
 import com.shubhutsav.app.ui.components.ExplainSimplyDialog
+import com.shubhutsav.app.ui.components.PujaModeDialog
 import com.shubhutsav.app.ui.theme.AuspiciousRed
 import com.shubhutsav.app.ui.theme.CardBorderGold
 import com.shubhutsav.app.ui.theme.CardBorderSubtle
@@ -74,6 +76,7 @@ fun FestivalDetailScreen(
 
     var selectedTab by remember { mutableStateOf(0) }
     var showExplainSimply by remember { mutableStateOf(false) }
+    var showPujaMode by remember { mutableStateOf(false) }
 
     // Persistent step tracking state
     var completedStepsCount by remember {
@@ -99,6 +102,20 @@ fun FestivalDetailScreen(
             isHindi = language == "hi",
             language = language,
             onDismiss = { showExplainSimply = false }
+        )
+    }
+
+    if (showPujaMode) {
+        PujaModeDialog(
+            festival = festival,
+            language = language,
+            textToSpeech = textToSpeech.value,
+            ttsReady = ttsReady,
+            onDismiss = { showPujaMode = false },
+            onStepCompletedChanged = {
+                completedStepsCount = prefs.getCompletedStepsCount(festival.id, festival.steps.size)
+                stepToggleCounter++
+            }
         )
     }
 
@@ -494,6 +511,33 @@ fun FestivalDetailScreen(
 
             // TAB 1: Interactive Step-by-Step Puja Vidhi
             if (selectedTab == 1) {
+                item {
+                    Button(
+                        onClick = { showPujaMode = true },
+                        shape = RoundedCornerShape(18.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = RoyalMaroon
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp)
+                    ) {
+                        Text(text = "🪔", fontSize = 18.sp)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = when (language) {
+                                "mr" -> "हँड्स-फ्री पूजा मोड सुरू करा (स्क्रीन चालू)"
+                                "hi" -> "हैंड्स-फ्री पूजा मोड शुरू करें (स्क्रीन ऑन)"
+                                else -> "Start Hands-Free Puja Mode (Awake)"
+                            },
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.5.sp,
+                            color = VedicGoldLight
+                        )
+                    }
+                }
+
                 item {
                     val progressFraction = if (festival.steps.isEmpty()) 0f else completedStepsCount.toFloat() / festival.steps.size
                     val isAllCompleted = completedStepsCount == festival.steps.size && festival.steps.isNotEmpty()
@@ -943,6 +987,19 @@ fun FestivalDetailScreen(
                                 onCheckedChange = {
                                     prepReminder = it
                                     prefs.setReminderActive(festival.id, "prep", it)
+                                    if (it) {
+                                        AlarmScheduler.scheduleReminder(
+                                            context = context,
+                                            festivalId = festival.id,
+                                            reminderType = "prep",
+                                            festivalDateEn = festival.date2026En,
+                                            muhuratTimeEn = festival.muhurat.timeEn,
+                                            festivalName = festival.getName(language),
+                                            language = language
+                                        )
+                                    } else {
+                                        AlarmScheduler.cancelReminder(context, festival.id, "prep")
+                                    }
                                 }
                             )
 
@@ -963,6 +1020,19 @@ fun FestivalDetailScreen(
                                 onCheckedChange = {
                                     muhuratReminder = it
                                     prefs.setReminderActive(festival.id, "muhurat", it)
+                                    if (it) {
+                                        AlarmScheduler.scheduleReminder(
+                                            context = context,
+                                            festivalId = festival.id,
+                                            reminderType = "muhurat",
+                                            festivalDateEn = festival.date2026En,
+                                            muhuratTimeEn = festival.muhurat.timeEn,
+                                            festivalName = festival.getName(language),
+                                            language = language
+                                        )
+                                    } else {
+                                        AlarmScheduler.cancelReminder(context, festival.id, "muhurat")
+                                    }
                                 }
                             )
 
@@ -983,6 +1053,19 @@ fun FestivalDetailScreen(
                                 onCheckedChange = {
                                     shoppingReminder = it
                                     prefs.setReminderActive(festival.id, "shopping", it)
+                                    if (it) {
+                                        AlarmScheduler.scheduleReminder(
+                                            context = context,
+                                            festivalId = festival.id,
+                                            reminderType = "shopping",
+                                            festivalDateEn = festival.date2026En,
+                                            muhuratTimeEn = festival.muhurat.timeEn,
+                                            festivalName = festival.getName(language),
+                                            language = language
+                                        )
+                                    } else {
+                                        AlarmScheduler.cancelReminder(context, festival.id, "shopping")
+                                    }
                                 }
                             )
                         }

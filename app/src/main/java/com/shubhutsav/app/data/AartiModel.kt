@@ -154,6 +154,94 @@ object AartiRepository {
                 AartiLyricLine("कर्पूरगौरं करुणावतारं संसारसारम् ।", "कर्पूरगौरं करुणावतारं संसारसारम् ।", "Karpura-gauram karunavataram sansarasaram |"),
                 AartiLyricLine("सदावसन्तं हृदयारविन्दे भवं भवानीसहितं नमामि ॥", "सदावसन्तं हृदयारविन्दे भवं भवानीसहितं नमामि ॥", "Sada-vasantam hridayaravinde bhavam bhavani-sahitam namami ||")
             )
+        ),
+        SacredAarti(
+            id = "durga_aarti",
+            titleEn = "Jai Ambe Gauri",
+            titleHi = "जय अम्बे गौरी (श्री दुर्गा आरती)",
+            titleMr = "जय अंबे गौरी (दुर्गा माता आरती)",
+            deity = "Maa Durga",
+            category = "Aarti",
+            durationApproxSeconds = 240,
+            lines = listOf(
+                AartiLyricLine("जय अम्बे गौरी, मैया जय श्यामा गौरी ।", "जय अम्बे गौरी, मैया जय श्यामा गौरी ।", "Jai Ambe Gauri, Maiya Jai Shyama Gauri |"),
+                AartiLyricLine("तुमको निसदिन ध्यावत, हरि ब्रह्मा शिवरी ॥", "तुमको निसदिन ध्यावत, हरि ब्रह्मा शिवरी ॥", "Tumko nisdin dhyavat, Hari Brahma Shivri ||"),
+                AartiLyricLine("मांग सिंदूर विराजत, टीको मृगमद को ।", "मांग सिंदूर विराजत, टीको मृगमद को ।", "Maang sindoor virajat, teeko mrigmad ko |"),
+                AartiLyricLine("उज्ज्वल से दोउ नैना, चंद्रवदन नीको ॥", "उज्ज्वल से दोउ नैना, चंद्रवदन नीको ॥", "Ujjwal se dou naina, chandravadan neeko ||"),
+                AartiLyricLine("कनक समान कलेवर, रक्तांबर राजै ।", "कनक समान कलेवर, रक्तांबर राजै ।", "Kanak saman kalevar, raktambar raje |"),
+                AartiLyricLine("रक्तपुष्प गल माला, कंठन पर साजै ॥", "रक्तपुष्प गल माला, कंठन पर साजै ॥", "Raktapushp gal mala, kanthan par saaje ||"),
+                AartiLyricLine("केहरि वाहन राजत, खड्ग खप्पर धारी ।", "केहरि वाहन राजत, खड्ग खप्पर धारी ।", "Kehari vahan rajat, khadag khappar dhari |"),
+                AartiLyricLine("सुर-नर-मुनिजन सेवत, तिनके दुःखहारी ॥", "सुर-नर-मुनिजन सेवत, तिनके दुःखहारी ॥", "Sur-nar-munijan sevat, tinke dukh-hari ||"),
+                AartiLyricLine("चौंसठ योगिनि गावत, नृत्य करत भैरों ।", "चौंसठ योगिनि गावत, नृत्य करत भैरों ।", "Chaunsath yogini gavat, nritya karat bhairon |"),
+                AartiLyricLine("बाजत ताल मृदंगा, अरु बाजत डमरू ॥", "बाजत ताल मृदंगा, अरु बाजत डमरू ॥", "Bajat taal mridanga, aru bajat damroo ||"),
+                AartiLyricLine("तुम ही जग की माता, तुम ही हो भरता ।", "तुम ही जग की माता, तुम ही हो भरता ।", "Tum hi jag ki mata, tum hi ho bharta |"),
+                AartiLyricLine("भक्तन की दुःख हरता, सुख सम्पति करता ॥", "भक्तन की दुःख हरता, सुख सम्पति करता ॥", "Bhaktan ki dukh harta, sukh sampati karta ||")
+            )
+        ),
+        SacredAarti(
+            id = "shri_ram_stuti",
+            titleEn = "Shri Ramchandra Kripalu Bhajuman",
+            titleHi = "श्री रामचंद्र कृपालु भजु मन (राम स्तुति)",
+            titleMr = "श्री रामचंद्र कृपालु भजु मन",
+            deity = "Lord Rama",
+            category = "Stuti",
+            durationApproxSeconds = 240,
+            lines = listOf(
+                AartiLyricLine("श्रीरामचन्द्र कृपालु भजु मन हरण भवभय दारुणम् ।", "श्रीरामचन्द्र कृपालु भजु मन हरण भवभय दारुणम् ।", "Shri Ramchandra kripalu bhaju man haran bhavabhay daarunam |"),
+                AartiLyricLine("नवकंज लोचन, कंज मुख, कर कंज, पद कंजारुणम् ॥", "नवकंज लोचन, कंज मुख, कर कंज, पद कंजारुणम् ॥", "Navakanj lochan, kanj mukh, kar kanj, pad kanjaarunam ||"),
+                AartiLyricLine("कंदर्प अगणित अमित छबि, नवनील नीरद सुन्दरम् ।", "कंदर्प अगणित अमित छबि, नवनील नीरद सुन्दरम् ।", "Kandarp aganit amit chhabi, navaneel neerad sundaram |"),
+                AartiLyricLine("पट पीत मानहु तड़ित रुचि शुचि नौमि जनक सुतावरम् ॥", "पट पीत मानहु तड़ित रुचि शुचि नौमि जनक सुतावरम् ॥", "Pat peet manahu tadit ruchi shuchi naumi Janak sutavaram ||"),
+                AartiLyricLine("भजु दीनबंधु दिनेश दानव दैत्य वंश निकंदनम् ।", "भजु दीनबंधु दिनेश दानव दैत्य वंश निकंदनम् ।", "Bhaju deenabandhu dinesh danav daitya vansh nikandanam |"),
+                AartiLyricLine("रघुनंद आनंदकंद कोशलचंद दशरथ नंदनम् ॥", "रघुनंद आनंदकंद कोशलचंद दशरथ नंदनम् ॥", "Raghunand aanandakand Koshalachand Dasharatha nandanam ||"),
+                AartiLyricLine("सिर मुकुट कुंडल तिलक चारु उदारु अंग विभूषणम् ।", "सिर मुकुट कुंडल तिलक चारु उदारु अंग विभूषणम् ।", "Sir mukut kundal tilak chaaru udaaru ang vibhooshanam |"),
+                AartiLyricLine("आजानुभुज शर चाप धर, संग्राम जित खर-दूषणम् ॥", "आजानुभुज शर चाप धर, संग्राम जित खर-दूषणम् ॥", "Aajaanubhuj shar chaap dhar, sangram jit Khar-Dooshanam ||"),
+                AartiLyricLine("इति वदति तुलसीदास शंकर शेष मुनि मन रंजनम् ।", "इति वदति तुलसीदास शंकर शेष मुनि मन रंजनम् ।", "Iti vadati Tulasidas Shankar Shesh muni man ranjanam |"),
+                AartiLyricLine("मम हृदय कंज निवास कुरु, कामादि खल दल गंजनम् ॥", "मम हृदय कंज निवास कुरु, कामादि खल दल गंजनम् ॥", "Mam hriday kanj nivaas kuru, kaamadi khal dal ganjanam ||")
+            )
+        ),
+        SacredAarti(
+            id = "ghalin_lotangan",
+            titleEn = "Ghalin Lotangan (Prarthana)",
+            titleHi = "घालीन लोटांगण वंदन चरणी (प्रार्थना)",
+            titleMr = "घालीन लोटांगण वंदन चरणी",
+            deity = "Universal Divine",
+            category = "Stuti",
+            durationApproxSeconds = 210,
+            lines = listOf(
+                AartiLyricLine("घालीन लोटांगण वंदीन चरण ।", "घालीन लोटांगण वंदीन चरण ।", "Ghalin lotangan vandin charan |"),
+                AartiLyricLine("डोळ्यांनी पाहीन रूप तुझें ॥", "डोळ्यांनी पाहीन रूप तुझें ॥", "Dolyanni pahin roop tujhe ||"),
+                AartiLyricLine("प्रेमें आलिंगिन आनंदें पूजिन ।", "प्रेमें आलिंगिन आनंदें पूजिन ।", "Premen aalingin aananden poojin |"),
+                AartiLyricLine("भावें ओवाळीन म्हणे नामा ॥", "भावें ओवाळीन म्हणे नामा ॥", "Bhaven ovalin mhane nama ||"),
+                AartiLyricLine("त्वमेव माता च पिता त्वमेव ।", "त्वमेव माता च पिता त्वमेव ।", "Tvameva mata cha pita tvameva |"),
+                AartiLyricLine("त्वमेव बन्धुश्च सखा त्वमेव ॥", "त्वमेव बन्धुश्च सखा त्वमेव ॥", "Tvameva bandhush-cha sakha tvameva ||"),
+                AartiLyricLine("त्वमेव विद्या द्रविणं त्वमेव ।", "त्वमेव विद्या द्रविणं त्वमेव ।", "Tvameva vidya dravinam tvameva |"),
+                AartiLyricLine("त्वमेव सर्वं मम देव देव ॥", "त्वमेव सर्वं मम देव देव ॥", "Tvameva sarvam mama deva deva ||"),
+                AartiLyricLine("कायेन वाचा मनसेंद्रियैर्वा ।", "कायेन वाचा मनसेंद्रियैर्वा ।", "Kayena vacha manasendriyairva |"),
+                AartiLyricLine("बुद्ध्यात्मना वा प्रकृतिस्वभावात् ॥", "बुद्ध्यात्मना वा प्रकृतिस्वभावात् ॥", "Buddhyatmana va prakritisvabhavat ||"),
+                AartiLyricLine("करोमि यद्यत् सकलं परस्मै ।", "करोमि यद्यत् सकलं परस्मै ।", "Karomi yadyat sakalam parasmai |"),
+                AartiLyricLine("नारायणायेति समर्पयामि ॥", "नारायणायेति समर्पयामि ॥", "Narayanayeti samarpayami ||"),
+                AartiLyricLine("अच्युतं केशवं रामनारायणं कृष्णदामोदरं वासुदेवं हरिम् ।", "अच्युतं केशवं रामनारायणं कृष्णदामोदरं वासुदेवं हरिम् ।", "Achyutam Keshavam Ramanarayanam Krishna Damodaram Vasudevam Harim |"),
+                AartiLyricLine("श्रीधरं माधवं गोपिकावल्लभं जानकीनायकं रामचंद्रं भजे ॥", "श्रीधरं माधवं गोपिकावल्लभं जानकीनायकं रामचंद्रं भजे ॥", "Shridharam Madhavam Gopikavallabham Janakinayakam Ramachandram bhaje ||"),
+                AartiLyricLine("हरे राम हरे राम राम राम हरे हरे ।", "हरे राम हरे राम राम राम हरे हरे ।", "Hare Rama Hare Rama Rama Rama Hare Hare |"),
+                AartiLyricLine("हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे ॥", "हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे ॥", "Hare Krishna Hare Krishna Krishna Krishna Hare Hare ||")
+            )
+        ),
+        SacredAarti(
+            id = "shiva_tandava",
+            titleEn = "Shiva Tandava Stotram",
+            titleHi = "शिव तांडव स्तोत्रम् (रावण कृत)",
+            titleMr = "शिव तांडव स्तोत्र",
+            deity = "Lord Shiva",
+            category = "Stotra",
+            durationApproxSeconds = 300,
+            lines = listOf(
+                AartiLyricLine("जटाटवीगलज्जलप्रवाहपावितस्थले गलेऽवलम्ब्य लम्बितां भुजङ्गतुङ्गमालिकाम् ।", "जटाटवीगलज्जलप्रवाहपावितस्थले गलेऽवलम्ब्य लम्बितां भुजङ्गतुङ्गमालिकाम् ।", "Jatatavee-galaj-jala-pravaha-paavita-sthale gale avalambya lambitam bhujanga-tunga-malikam |"),
+                AartiLyricLine("डमड्डमड्डमड्डमन्निनादवड्डमर्वयं चकार चण्डताण्डवं तनोतु नः शिवः शिवम् ॥", "डमड्डमड्डमड्डमन्निनादवड्डमर्वयं चकार चण्डताण्डवं तनोतु नः शिवः शिवम् ॥", "Damad-damad-damad-daman-ninadavaddamar-vayam chakara chanda-tandavam tanotu nah shivah shivam ||"),
+                AartiLyricLine("जटाकटाहसंभ्रमभ्रमन्निलिम्पनिर्झरी- विलोलवीचिवल्लरीविराजमानमूर्धनि ।", "जटाकटाहसंभ्रमभ्रमन्निलिम्पनिर्झरी- विलोलवीचिवल्लरीविराजमानमूर्धनि ।", "Jata-kataha-sambhrama-bhraman-nilimpa-nirjhari vilola-veechi-vallari-virajamana-moordhani |"),
+                AartiLyricLine("धधद्धधद्धधज्ज्वलल्ललाटपट्टपावके किशोरचन्द्रशेखरे रतिः प्रतिक्षणं मम ॥", "धधद्धधद्धधज्ज्वलल्ललाटपट्टपावके किशोरचन्द्रशेखरे रतिः प्रतिक्षणं मम ॥", "Dhadhad-dhadhad-dhadhajj-jwalal-lalata-patta-paavake kishora-chandra-shekhare ratih pratikshanam mama ||"),
+                AartiLyricLine("धराधरेन्द्रनंदिनीविलासबन्धुबन्धुर- स्फुरद्दिगन्तसन्ततिप्रमोदमानमानसे ।", "धराधरेन्द्रनंदिनीविलासबन्धुबन्धुर- स्फुरद्दिगन्तसन्ततिप्रमोदमानमानसे ।", "Dharadharendra-nandini-vilasa-bandhu-bandhura sphurad-diganta-santati-pramodamana-manase |"),
+                AartiLyricLine("कृपाकटाक्षधोरणीनिरुद्धदुर्धरापदि क्वचिद्दिगम्बरे मनो विनोदमेतु वस्तुनि ॥", "कृपाकटाक्षधोरणीनिरुद्धदुर्धरापदि क्वचिद्दिगम्बरे मनो विनोदमेतु वस्तुनि ॥", "Kripa-kataksha-dhorani-niruddha-durdharapadi kvachid-digambare mano vinodametu vastuni ||")
+            )
         )
     )
 

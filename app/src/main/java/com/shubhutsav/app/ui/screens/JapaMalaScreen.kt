@@ -35,6 +35,7 @@ import com.shubhutsav.app.data.PreferencesManager
 import com.shubhutsav.app.data.SacredMantra
 import com.shubhutsav.app.data.SacredSoundPlayer
 import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.theme.AuspiciousRed
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.RoyalMaroonDark
@@ -61,6 +62,8 @@ fun JapaMalaScreen(
     var malasCompletedSession by remember { mutableIntStateOf(0) }
     var totalMalasAllTime by remember { mutableIntStateOf(prefs.japaTotalMalas) }
     var totalChantsAllTime by remember { mutableIntStateOf(prefs.japaTotalChants) }
+    var targetMalas by remember { mutableIntStateOf(prefs.japaTargetMalas) }
+    var currentStreak by remember { mutableIntStateOf(prefs.japaStreak) }
 
     var soundEnabled by remember { mutableStateOf(prefs.japaSoundEnabled) }
     var hapticsEnabled by remember { mutableStateOf(prefs.japaHapticsEnabled) }
@@ -89,6 +92,7 @@ fun JapaMalaScreen(
             totalMalasAllTime += 1
             totalChantsAllTime += 108
             prefs.recordMalaCompleted(108)
+            currentStreak = prefs.japaStreak
             SacredSoundPlayer.playMalaComplete(context)
             showCelebrationDialog = true
         } else {
@@ -314,11 +318,68 @@ fun JapaMalaScreen(
                 }
             }
 
-            // Stats & Controls Row
+            // Target Mala Milestone Selector
+            item {
+                Surface(
+                    shape = RoundedCornerShape(18.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "🎯 आजचे जप लक्ष्य : $targetMalas माळा"
+                                    "hi" -> "🎯 आज का जप लक्ष्य : $targetMalas माला"
+                                    else -> "🎯 Target : $targetMalas Malas"
+                                },
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "${malasCompletedSession}/$targetMalas",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = if (malasCompletedSession >= targetMalas) Color(0xFF4CAF50) else KesariyaSaffron
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            listOf(1, 3, 5, 11, 21, 108).forEach { targetOption ->
+                                val isSelected = targetMalas == targetOption
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = {
+                                        targetMalas = targetOption
+                                        prefs.japaTargetMalas = targetOption
+                                    },
+                                    label = { Text("$targetOption") },
+                                    modifier = Modifier.weight(1f),
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = KesariyaSaffron,
+                                        selectedLabelColor = Color.White
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Stats & Controls Row (Malas, Chants & Daily Streak)
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // Total Malas Counter Card
                     Surface(
@@ -328,12 +389,12 @@ fun JapaMalaScreen(
                         modifier = Modifier.weight(1f)
                     ) {
                         Column(
-                            modifier = Modifier.padding(14.dp),
+                            modifier = Modifier.padding(12.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 text = "🏆 $totalMalasAllTime",
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -344,7 +405,7 @@ fun JapaMalaScreen(
                                     "hi" -> "कुल मालाएँ"
                                     else -> "Total Malas"
                                 },
-                                fontSize = 11.sp,
+                                fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -358,23 +419,53 @@ fun JapaMalaScreen(
                         modifier = Modifier.weight(1f)
                     ) {
                         Column(
-                            modifier = Modifier.padding(14.dp),
+                            modifier = Modifier.padding(12.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 text = "✨ $totalChantsAllTime",
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = KesariyaSaffron
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = when (language) {
-                                    "mr" -> "एकूण जप संख्या"
-                                    "hi" -> "कुल जाप संख्या"
+                                    "mr" -> "एकूण जप"
+                                    "hi" -> "कुल जाप"
                                     else -> "Total Chants"
                                 },
-                                fontSize = 11.sp,
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    // Daily Streak Card
+                    Surface(
+                        shape = RoundedCornerShape(18.dp),
+                        color = MaterialTheme.colorScheme.surface,
+                        tonalElevation = 2.dp,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "🔥 ${currentStreak}d",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = AuspiciousRed
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "सातत्य"
+                                    "hi" -> "नियमितता"
+                                    else -> "Streak"
+                                },
+                                fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }

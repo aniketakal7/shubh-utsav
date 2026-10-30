@@ -50,13 +50,21 @@ fun ShoppingScreen(
     val prefs = remember { PreferencesManager(context) }
 
     var boughtCounter by remember {
-        mutableStateOf(prefs.getBoughtSuppliesCount(festival.id, festival.supplies.size))
+        mutableStateOf(
+            prefs.getBoughtSuppliesCount(festival.id, festival.supplies.size) +
+            prefs.getBoughtCustomSuppliesCount(festival.id)
+        )
     }
     var toggleCounter by remember { mutableStateOf(0) }
 
     var showAddItemDialog by remember { mutableStateOf(false) }
     var customItems by remember { mutableStateOf(prefs.getCustomSupplies(festival.id)) }
     var selectedFilter by remember { mutableStateOf(0) } // 0 = All, 1 = Pending, 2 = Bought
+
+    fun recalculateBoughtCount() {
+        boughtCounter = prefs.getBoughtSuppliesCount(festival.id, festival.supplies.size) +
+            prefs.getBoughtCustomSuppliesCount(festival.id)
+    }
 
     val totalItems = festival.supplies.size + customItems.size
     val progressFraction = if (totalItems == 0) 0f else (boughtCounter.toFloat() / totalItems).coerceIn(0f, 1f)
@@ -421,24 +429,74 @@ fun ShoppingScreen(
 
                     itemsIndexed(filteredCustomItems) { _, (_, pair) ->
                         val (cName, cQty) = pair
+                        val isBought = prefs.isCustomSupplyBought(festival.id, cName, cQty)
                         Card(
                             shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-                            modifier = Modifier.fillMaxWidth()
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isBought)
+                                    SuccessGreen.copy(alpha = 0.06f)
+                                else
+                                    MaterialTheme.colorScheme.surface
+                            ),
+                            border = BorderStroke(
+                                1.dp,
+                                if (isBought) SuccessGreen.copy(alpha = 0.4f)
+                                else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    prefs.toggleCustomSupply(festival.id, cName, cQty)
+                                    recalculateBoughtCount()
+                                    toggleCounter++
+                                }
                         ) {
                             Row(
                                 modifier = Modifier.padding(14.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                // Bought checkbox indicator
+                                Box(
+                                    modifier = Modifier
+                                        .size(28.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            if (isBought) SuccessGreen
+                                            else MaterialTheme.colorScheme.surfaceVariant
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    if (isBought) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Bought",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(text = cName, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-                                    Text(text = cQty, fontSize = 12.sp, color = KesariyaSaffron, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = cName,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 14.sp,
+                                        textDecoration = if (isBought) TextDecoration.LineThrough else TextDecoration.None,
+                                        color = if (isBought) MaterialTheme.colorScheme.onSurfaceVariant
+                                            else MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = cQty,
+                                        fontSize = 12.sp,
+                                        color = KesariyaSaffron,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                                 IconButton(
                                     onClick = {
                                         prefs.removeCustomSupply(festival.id, cName, cQty)
                                         customItems = prefs.getCustomSupplies(festival.id)
+                                        recalculateBoughtCount()
                                     }
                                 ) {
                                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = Color.Gray)

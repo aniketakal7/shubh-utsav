@@ -3,12 +3,15 @@ package com.shubhutsav.app.ui.screens
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,7 +37,9 @@ import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.RoyalMaroonDark
 import com.shubhutsav.app.ui.theme.VedicGold
 import com.shubhutsav.app.ui.theme.VedicGoldLight
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun ChoghadiyaScreen(
@@ -45,14 +50,22 @@ fun ChoghadiyaScreen(
     onToggleLanguage: () -> Unit
 ) {
     var selectedTab by remember { mutableIntStateOf(0) } // 0: Day, 1: Night
-    val calendar = remember { Calendar.getInstance() }
+    var dayOffset by remember { mutableIntStateOf(0) }
 
-    val allSlots = remember(city) { PanchangCalculator.calculateChoghadiya(city = city, calendar = calendar) }
+    val selectedCal = remember(dayOffset) {
+        Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, dayOffset) }
+    }
+
+    val allSlots = remember(city, dayOffset) {
+        PanchangCalculator.calculateChoghadiya(city = city, calendar = selectedCal)
+    }
     val daySlots = remember(allSlots) { allSlots.filter { it.isDay } }
     val nightSlots = remember(allSlots) { allSlots.filter { !it.isDay } }
 
-    val currentSlot = remember(allSlots) { allSlots.find { it.isCurrent } }
-    val dishaShool = remember { PanchangCalculator.getDishaShool(calendar) }
+    val currentSlot = remember(allSlots, dayOffset) {
+        if (dayOffset == 0) allSlots.find { it.isCurrent } else null
+    }
+    val dishaShool = remember(dayOffset) { PanchangCalculator.getDishaShool(selectedCal) }
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -80,7 +93,101 @@ fun ChoghadiyaScreen(
             contentPadding = PaddingValues(top = 10.dp, bottom = 40.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // "Active Right Now" Choghadiya Hero Card
+            // Interactive Date Navigation Selector
+            item {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick = { dayOffset -= 1 },
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Previous Day",
+                                tint = KesariyaSaffron,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable { dayOffset = 0 }
+                        ) {
+                            val navDateLabel = when (dayOffset) {
+                                0 -> when (language) {
+                                    "mr" -> "आज (Today)"
+                                    "hi" -> "आज (Today)"
+                                    else -> "Today"
+                                }
+                                -1 -> when (language) {
+                                    "mr" -> "काल (Yesterday)"
+                                    "hi" -> "कल (Yesterday)"
+                                    else -> "Yesterday"
+                                }
+                                1 -> when (language) {
+                                    "mr" -> "उद्या (Tomorrow)"
+                                    "hi" -> "कल (Tomorrow)"
+                                    else -> "Tomorrow"
+                                }
+                                else -> {
+                                    val fmt = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                                    fmt.format(selectedCal.time)
+                                }
+                            }
+                            Text(
+                                text = "📅 $navDateLabel",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            if (dayOffset != 0) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = KesariyaSaffron
+                                ) {
+                                    Text(
+                                        text = when (language) {
+                                            "mr" -> "आजवर जा"
+                                            "hi" -> "आज पर जाएं"
+                                            else -> "Go Today"
+                                        },
+                                        color = Color.White,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        IconButton(
+                            onClick = { dayOffset += 1 },
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = "Next Day",
+                                tint = KesariyaSaffron,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // "Active Right Now" / "Selected Date" Choghadiya Hero Card
             item {
                 Surface(
                     shape = RoundedCornerShape(24.dp),
@@ -107,14 +214,23 @@ fun ChoghadiyaScreen(
                                         modifier = Modifier
                                             .size(10.dp)
                                             .clip(CircleShape)
-                                            .background(if (currentSlot?.type?.isAuspicious == true) Color(0xFF4CAF50) else Color(0xFFFF5252))
+                                            .background(
+                                                if (currentSlot != null) {
+                                                    if (currentSlot.type.isAuspicious) Color(0xFF4CAF50) else Color(0xFFFF5252)
+                                                } else VedicGoldLight
+                                            )
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = when (language) {
-                                            "mr" -> "आत्ता चालू असलेला मुहूर्त"
-                                            "hi" -> "वर्तमान सक्रिय चौघड़िया"
-                                            else -> "ACTIVE RIGHT NOW"
+                                        text = if (dayOffset == 0) {
+                                            when (language) {
+                                                "mr" -> "आत्ता चालू असलेला मुहूर्त"
+                                                "hi" -> "वर्तमान सक्रिय चौघड़िया"
+                                                else -> "ACTIVE RIGHT NOW"
+                                            }
+                                        } else {
+                                            val fmt = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+                                            fmt.format(selectedCal.time)
                                         },
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
@@ -123,7 +239,7 @@ fun ChoghadiyaScreen(
                                     )
                                 }
                                 Text(
-                                    text = if (currentSlot?.isDay == true) "☀️ Day" else "🌙 Night",
+                                    text = if (currentSlot?.isDay == true) "☀️ Day" else if (currentSlot != null) "🌙 Night" else "✨ Vedic",
                                     fontSize = 12.sp,
                                     color = Color.White.copy(alpha = 0.8f)
                                 )
@@ -131,7 +247,11 @@ fun ChoghadiyaScreen(
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            if (currentSlot != null) {
+                            if (currentSlot != null && dayOffset == 0) {
+                                val nowCal = Calendar.getInstance()
+                                val nowMinutes = nowCal.get(Calendar.HOUR_OF_DAY) * 60 + nowCal.get(Calendar.MINUTE)
+                                val remainingMinutes = (currentSlot.endMinutes - nowMinutes).let { if (it < 0) it + 1440 else it }
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -160,24 +280,48 @@ fun ChoghadiyaScreen(
                                         )
                                     }
 
-                                    Surface(
-                                        shape = RoundedCornerShape(12.dp),
-                                        color = Color.White.copy(alpha = 0.15f)
-                                    ) {
-                                        Text(
-                                            text = "${currentSlot.startTime} – ${currentSlot.endTime}",
-                                            fontSize = 13.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color.White,
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        )
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Surface(
+                                            shape = RoundedCornerShape(12.dp),
+                                            color = Color.White.copy(alpha = 0.15f)
+                                        ) {
+                                            Text(
+                                                text = "${currentSlot.startTime} – ${currentSlot.endTime}",
+                                                fontSize = 13.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White,
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Surface(
+                                            shape = RoundedCornerShape(8.dp),
+                                            color = KesariyaSaffron.copy(alpha = 0.85f)
+                                        ) {
+                                            Text(
+                                                text = when (language) {
+                                                    "mr" -> "⏳ $remainingMinutes मिनिटे शिल्लक"
+                                                    "hi" -> "⏳ $remainingMinutes मिनट शेष"
+                                                    else -> "⏳ $remainingMinutes min left"
+                                                },
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White,
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                            )
+                                        }
                                     }
                                 }
                             } else {
                                 Text(
-                                    text = "Transitioning Muhurat...",
-                                    color = Color.White,
-                                    fontSize = 16.sp
+                                    text = when (language) {
+                                        "mr" -> "खालील तक्त्यामध्ये दिवस आणि रात्रीचे सर्व १६ मुहूर्त पहा."
+                                        "hi" -> "नीचे दी गई सूची में दिन एवं रात्रि के समस्त 16 मुहूर्त देखें।"
+                                        else -> "Explore all 16 day and night Choghadiya slots below."
+                                    },
+                                    color = Color.White.copy(alpha = 0.9f),
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp
                                 )
                             }
                         }

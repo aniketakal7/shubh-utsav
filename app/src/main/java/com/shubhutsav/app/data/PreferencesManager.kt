@@ -204,6 +204,28 @@ class PreferencesManager(context: Context) {
         val current = (prefs.getStringSet("custom_supplies_$festivalId", emptySet()) ?: emptySet()).toMutableSet()
         current.remove("$name|||$quantity")
         prefs.edit().putStringSet("custom_supplies_$festivalId", current).apply()
+        // Also remove bought state for this custom item
+        prefs.edit().remove("custom_supply_bought_${festivalId}_${name}_$quantity").apply()
+    }
+
+    // --- Custom Supply Bought Tracking ---
+    fun isCustomSupplyBought(festivalId: String, name: String, quantity: String): Boolean {
+        return prefs.getBoolean("custom_supply_bought_${festivalId}_${name}_$quantity", false)
+    }
+
+    fun setCustomSupplyBought(festivalId: String, name: String, quantity: String, bought: Boolean) {
+        prefs.edit().putBoolean("custom_supply_bought_${festivalId}_${name}_$quantity", bought).apply()
+    }
+
+    fun toggleCustomSupply(festivalId: String, name: String, quantity: String): Boolean {
+        val newState = !isCustomSupplyBought(festivalId, name, quantity)
+        setCustomSupplyBought(festivalId, name, quantity, newState)
+        return newState
+    }
+
+    fun getBoughtCustomSuppliesCount(festivalId: String): Int {
+        val customs = getCustomSupplies(festivalId)
+        return customs.count { (name, qty) -> isCustomSupplyBought(festivalId, name, qty) }
     }
 
     // --- Reminders per festival ---
@@ -251,10 +273,44 @@ class PreferencesManager(context: Context) {
         get() = prefs.getBoolean("japa_haptics_enabled", true)
         set(value) = prefs.edit().putBoolean("japa_haptics_enabled", value).apply()
 
+    var japaStreak: Int
+        get() = prefs.getInt("japa_streak", 0)
+        set(value) = prefs.edit().putInt("japa_streak", value).apply()
+
+    var japaLastDate: String
+        get() = prefs.getString("japa_last_date", "") ?: ""
+        set(value) = prefs.edit().putString("japa_last_date", value).apply()
+
     fun recordMalaCompleted(chantsCount: Int) {
         val editor = prefs.edit()
         editor.putInt("japa_total_malas", japaTotalMalas + 1)
         editor.putInt("japa_total_chants", japaTotalChants + chantsCount)
+
+        // Streak calculation
+        val todayFmt = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        val todayStr = todayFmt.format(java.util.Date())
+        val lastDate = japaLastDate
+
+        if (lastDate != todayStr) {
+            val yesterdayCal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.DAY_OF_YEAR, -1) }
+            val yesterdayStr = todayFmt.format(yesterdayCal.time)
+            if (lastDate == yesterdayStr) {
+                editor.putInt("japa_streak", japaStreak + 1)
+            } else {
+                editor.putInt("japa_streak", 1)
+            }
+            editor.putString("japa_last_date", todayStr)
+        }
         editor.apply()
     }
+
+    // --- Greeting Card Sender Name ---
+    var greetingSenderName: String
+        get() = prefs.getString("greeting_sender_name", "") ?: ""
+        set(value) = prefs.edit().putString("greeting_sender_name", value).apply()
+
+    // --- Notification Permission ---
+    var hasAskedNotificationPermission: Boolean
+        get() = prefs.getBoolean("asked_notification_permission", false)
+        set(value) = prefs.edit().putBoolean("asked_notification_permission", value).apply()
 }

@@ -13,3 +13,6 @@ captures/
 *.ap_
 output.json
 .kotlin
+.vscode/
+.idx/
+.mcp.json

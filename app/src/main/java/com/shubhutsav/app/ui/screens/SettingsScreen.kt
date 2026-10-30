@@ -1,8 +1,13 @@
 package com.shubhutsav.app.ui.screens
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,12 +29,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.City
 import com.shubhutsav.app.data.PreferencesManager
 import com.shubhutsav.app.data.UpdateCheckResult
 import com.shubhutsav.app.data.UpdateInfo
 import com.shubhutsav.app.data.UpdateManager
+import com.shubhutsav.app.notifications.FestivalReminderReceiver
 import com.shubhutsav.app.notifications.NotificationHelper
 import com.shubhutsav.app.data.AuthManager
 import com.shubhutsav.app.ui.components.AppBottomNav
@@ -69,6 +76,25 @@ fun SettingsScreen(
     var isCheckingUpdate by remember { mutableStateOf(false) }
     val currentVersionName = remember { UpdateManager.getCurrentVersionName(context) }
     val currentVersionCode = remember { UpdateManager.getCurrentVersionCode(context) }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            remindersEnabled = true
+            prefs.remindersEnabled = true
+            FestivalReminderReceiver.rescheduleAllReminders(context)
+            Toast.makeText(
+                context,
+                when (language) {
+                    "mr" -> "स्मरणपत्रे सक्रिय केली!"
+                    "hi" -> "रिमाइंडर सक्रिय किए गए!"
+                    else -> "Reminders activated!"
+                },
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     if (showCityPicker) {
         CityPickerDialog(
@@ -669,9 +695,21 @@ fun SettingsScreen(
                             else -> "Preparation, shopping and timing notifications"
                         },
                         checked = remindersEnabled,
-                        onCheckedChange = {
-                            remindersEnabled = it
-                            prefs.remindersEnabled = it
+                        onCheckedChange = { isChecked ->
+                            if (isChecked) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                    ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                } else {
+                                    remindersEnabled = true
+                                    prefs.remindersEnabled = true
+                                    FestivalReminderReceiver.rescheduleAllReminders(context)
+                                }
+                            } else {
+                                remindersEnabled = false
+                                prefs.remindersEnabled = false
+                            }
                         }
                     )
 
@@ -679,16 +717,22 @@ fun SettingsScreen(
 
                     OutlinedButton(
                         onClick = {
-                            NotificationHelper.sendTestReminder(context, isHindi = language == "hi", language = language)
-                            Toast.makeText(
-                                context,
-                                when (language) {
-                                    "mr" -> "चाचणी सूचना पाठवली!"
-                                    "hi" -> "परीक्षण नोटिफिकेशन भेजा गया!"
-                                    else -> "Test notification sent!"
-                                },
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                            ) {
+                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            } else {
+                                NotificationHelper.sendTestReminder(context, isHindi = language == "hi", language = language)
+                                Toast.makeText(
+                                    context,
+                                    when (language) {
+                                        "mr" -> "चाचणी सूचना पाठवली!"
+                                        "hi" -> "परीक्षण नोटिफिकेशन भेजा गया!"
+                                        else -> "Test notification sent!"
+                                    },
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         },
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
