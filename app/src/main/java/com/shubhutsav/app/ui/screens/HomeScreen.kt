@@ -312,9 +312,9 @@ fun HomeScreen(
                             else -> "Shree Ekdanta Devotional Videos"
                         },
                         subtitle = when (language) {
-                            "mr" -> "@ShreeEkdanta चॅनेलचे सर्व पावन अभंग व व्हिडिओ थेट अ‍ॅपमध्ये पहा"
-                            "hi" -> "@ShreeEkdanta चैनल के सभी पावन अभंग व वीडियो सीधे ऐप में देखें"
-                            else -> "Watch all sacred @ShreeEkdanta videos & abhangs directly in-app"
+                            "mr" -> "🛡️ जाहिरातमुक्त — @ShreeEkdanta चे सर्व पावन अभंग व व्हिडिओ थेट अ‍ॅपमध्ये पहा"
+                            "hi" -> "🛡️ विज्ञापन-मुक्त — @ShreeEkdanta के सभी पावन अभंग व वीडियो सीधे ऐप में देखें"
+                            else -> "🛡️ Ad-Free — Watch all sacred @ShreeEkdanta videos & abhangs directly in-app"
                         },
                         accentColor = Color(0xFFCC0000),
                         modifier = Modifier.fillMaxWidth(),
