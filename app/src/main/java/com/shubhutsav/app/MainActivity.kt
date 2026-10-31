@@ -301,6 +301,16 @@ fun ShubhUtsavApp() {
                         onToggleLanguage = handleToggleLanguage
                     )
                 }
+
+                // Devotional Channel Videos Screen
+                composable("devotional_videos") {
+                    DevotionalVideosScreen(
+                        navController = navController,
+                        language = language,
+                        onLanguageChange = handleLanguageChange,
+                        onToggleLanguage = handleToggleLanguage
+                    )
+                }
             }
 
             // In-App Update Dialog

@@ -98,6 +98,7 @@ fun HomeScreen(
                 onToggleLanguage = onToggleLanguage,
                 cityName = if (city.isVillage) "🏡 " + city.displayName(language) else city.displayName(language),
                 onCityClick = { showCityPicker = true },
+                onVideosClick = { navController.navigate("devotional_videos") },
                 onSettingsClick = { navController.navigate("settings") }
             )
         },
@@ -300,6 +301,24 @@ fun HomeScreen(
                         accentColor = Color(0xFFE52D27),
                         modifier = Modifier.fillMaxWidth(),
                         onClick = { navController.navigate("greetings") }
+                    )
+
+                    // Row 4: Devotional Videos & Satsang Channel
+                    HomeActionCard(
+                        icon = "🎥",
+                        title = when (language) {
+                            "mr" -> "श्री एकदंत सत्संग व व्हिडिओ"
+                            "hi" -> "श्री एकदंत सत्संग एवं वीडियो"
+                            else -> "Shree Ekdanta Devotional Videos"
+                        },
+                        subtitle = when (language) {
+                            "mr" -> "@ShreeEkdanta चॅनेलचे सर्व पावन अभंग व व्हिडिओ थेट अ‍ॅपमध्ये पहा"
+                            "hi" -> "@ShreeEkdanta चैनल के सभी पावन अभंग व वीडियो सीधे ऐप में देखें"
+                            else -> "Watch all sacred @ShreeEkdanta videos & abhangs directly in-app"
+                        },
+                        accentColor = Color(0xFFCC0000),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { navController.navigate("devotional_videos") }
                     )
                 }
             }

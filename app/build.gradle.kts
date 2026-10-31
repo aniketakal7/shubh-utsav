@@ -13,8 +13,8 @@ android {
         applicationId = "com.shubhutsav.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 10
-        versionName = "1.5.1"
+        versionCode = 11
+        versionName = "1.5.2"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -43,6 +43,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.8.5")
     implementation("androidx.datastore:datastore-preferences:1.1.2")
+    implementation("io.coil-kt:coil-compose:2.7.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     testImplementation("junit:junit:4.13.2")
 

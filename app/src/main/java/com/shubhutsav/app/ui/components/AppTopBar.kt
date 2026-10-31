@@ -56,6 +56,7 @@ fun AppTopBar(
     cityName: String? = null,
     onCityClick: (() -> Unit)? = null,
     onBackClick: (() -> Unit)? = null,
+    onVideosClick: (() -> Unit)? = null,
     onSettingsClick: (() -> Unit)? = null
 ) {
     TopAppBar(
@@ -172,6 +173,21 @@ fun AppTopBar(
                         activeColor = Color(0xFFC2410C),
                         onClick = { onLanguageChange("mr") }
                     )
+                }
+            }
+
+            if (onVideosClick != null) {
+                IconButton(onClick = onVideosClick) {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface,
+                        shadowElevation = 1.dp,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(text = "▶️", fontSize = 14.sp)
+                        }
+                    }
                 }
             }
 

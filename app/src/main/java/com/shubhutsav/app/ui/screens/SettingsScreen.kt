@@ -1050,24 +1050,50 @@ fun SettingsScreen(
 
                         Spacer(modifier = Modifier.height(18.dp))
 
-                        Button(
-                            onClick = {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr_aniket_akal/"))
-                                context.startActivity(intent)
-                            },
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFE1306C)
-                            ),
-                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
-                            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "📸  @mr_aniket_akal",
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
+                            Button(
+                                onClick = { navController.navigate("devotional_videos") },
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFCC0000)
+                                ),
+                                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+                            ) {
+                                Text(
+                                    text = "📺 " + when (language) {
+                                        "mr" -> "सत्संग व्हिडिओ"
+                                        "hi" -> "सत्संग वीडियो"
+                                        else -> "Videos"
+                                    },
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp
+                                )
+                            }
+
+                            Button(
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr_aniket_akal/"))
+                                    context.startActivity(intent)
+                                },
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFE1306C)
+                                ),
+                                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+                            ) {
+                                Text(
+                                    text = "📸 Instagram",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
