@@ -77,7 +77,8 @@ object UpdateManager {
         val currentCode = getCurrentVersionCode(context)
         val currentName = getCurrentVersionName(context)
 
-        val targetUrl = if (!endpointUrl.isNullOrBlank()) endpointUrl else DEFAULT_UPDATE_URL
+        val rawTargetUrl = if (!endpointUrl.isNullOrBlank()) endpointUrl else DEFAULT_UPDATE_URL
+        val targetUrl = if (rawTargetUrl.contains("?")) "$rawTargetUrl&_cb=${System.currentTimeMillis()}" else "$rawTargetUrl?_cb=${System.currentTimeMillis()}"
 
         var connection: HttpURLConnection? = null
         try {
@@ -88,6 +89,8 @@ object UpdateManager {
                 readTimeout = 7000
                 setRequestProperty("Accept", "application/json")
                 setRequestProperty("User-Agent", "ShubhUtsavAndroid/${currentName}")
+                setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate")
+                setRequestProperty("Pragma", "no-cache")
             }
 
             val responseCode = connection.responseCode
@@ -150,7 +153,7 @@ object UpdateManager {
                 publishedDate = publishedDate
             )
 
-            if (latestCode > currentCode) {
+            if (latestCode > currentCode || isMandatory) {
                 UpdateCheckResult.UpdateAvailable(
                     info = info,
                     currentVersionCode = currentCode,

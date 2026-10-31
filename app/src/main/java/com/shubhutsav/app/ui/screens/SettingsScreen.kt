@@ -980,6 +980,100 @@ fun SettingsScreen(
                 }
             }
 
+            // App Version & Check for Updates Card
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = when (language) {
+                                "mr" -> "अ‍ॅप आवृत्ती (App Version)"
+                                "hi" -> "ऐप संस्करण (App Version)"
+                                else -> "App Version"
+                            },
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(
+                            text = "v$currentVersionName • Code $currentVersionCode",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = KesariyaSaffron
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+                            isCheckingUpdate = true
+                            coroutineScope.launch {
+                                val res = UpdateManager.checkForUpdates(context)
+                                isCheckingUpdate = false
+                                if (res is UpdateCheckResult.UpdateAvailable) {
+                                    onShowUpdateDialog(res.info)
+                                } else if (res is UpdateCheckResult.UpToDate) {
+                                    Toast.makeText(
+                                        context,
+                                        when (language) {
+                                            "mr" -> "आपले अ‍ॅप अद्ययावत आहे! (v$currentVersionName)"
+                                            "hi" -> "आपका ऐप नवीनतम संस्करण पर है! (v$currentVersionName)"
+                                            else -> "App is up to date! (v$currentVersionName)"
+                                        },
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        when (language) {
+                                            "mr" -> "अपडेट तपासता आले नाही. कृपया इंटरनेट तपासा."
+                                            "hi" -> "अपडेट की जांच नहीं हो सकी। कृपया इंटरनेट जांचें।"
+                                            else -> "Could not check updates. Check internet connection."
+                                        },
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        },
+                        enabled = !isCheckingUpdate,
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = KesariyaSaffron),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+                    ) {
+                        if (isCheckingUpdate) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                strokeWidth = 2.dp,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        } else {
+                            Text(
+                                text = when (language) {
+                                    "mr" -> "अपडेट तपासा"
+                                    "hi" -> "अपडेट जांचें"
+                                    else -> "Check Update"
+                                },
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+            }
+
             // Developer Credit Card — "Made by Aniket Akal" (Enhanced Premium Design)
             Card(
                 shape = RoundedCornerShape(26.dp),
