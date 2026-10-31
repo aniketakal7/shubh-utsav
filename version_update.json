@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 11,
-  "latestVersionName": "1.5.2",
+  "latestVersionCode": 12,
+  "latestVersionName": "1.5.3",
   "minSupportedVersionCode": 6,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.5.2 — Shree Ekdanta Devotional Videos! 🪔",
-    "hi": "शुभ उत्सव 1.5.2 — श्री एकदंत पावन सत्संग व वीडियो! 🪔",
-    "mr": "शुभ उत्सव १.५.२ — श्री एकदंत पावन सत्संग व व्हिडिओ! 🪔"
+    "en": "Shubh Utsav 1.5.3 — Ad-Free Devotional Videos! 🛡️🪔",
+    "hi": "शुभ उत्सव 1.5.3 — विज्ञापन-मुक्त पावन सत्संग व वीडियो! 🛡️🪔",
+    "mr": "शुभ उत्सव १.५.३ — जाहिरातमुक्त पावन सत्संग व व्हिडिओ! 🛡️🪔"
   },
   "releaseNotes": {
-    "en": "• 📺 Shree Ekdanta Channel: Watch all official devotional abhangs, bhajans, and video recitations directly inside the app with zero external distractions\n• 🛡️ In-App Seamless Video Player: Custom HTML5 player plays video in-app without leaving to YouTube or external browsers\n• 🪔 Hands-Free Puja Mode: Screen stays awake, step-by-step TTS voice recitation & temple bell chimes\n• ⏰ Exact Alarms: Timely alerts for Preparation, Shopping & Muhurat\n• 📅 Multi-Day Panchang: Browse past & future days with interactive date navigator",
-    "hi": "• 📺 श्री एकदंत चैनल: आधिकारिक भक्तिमय अभंग, भजन एवं सत्संग वीडियो सीधे ऐप के भीतर देखें — बिना किसी बाहरी भटकाव के\n• 🛡️ इन-ऐप वीडियो प्लेयर: यूट्यूब ऐप खोले बिना सीधे ऐप के भीतर सहज वीडियो प्ले\n• 🪔 हैंड्स-फ्री पूजा मोड: स्क्रीन हमेशा ऑन, बोलकर विधि सुनाने वाला TTS एवं घंटी नाद\n• ⏰ सटीक अलार्म: पूजा पूर्व तैयारी, खरीदारी व शुभ मुहूर्त के लिए सुरक्षित अलार्म\n• 📅 बहु-दिवसीय पंचांग: बीते व आने वाले दिनों का पंचांग देखें",
-    "mr": "• 📺 श्री एकदंत चॅनेल: @ShreeEkdanta चॅनेलचे सर्व पावन अभंग, भजने आणि सत्संग व्हिडिओ थेट अ‍ॅपमध्ये पहा — शून्य भटकाव\n• 🛡️ इन-अ‍ॅप व्हिडिओ प्लेअर: यूट्यूब किंवा बाहेरील ब्राउझर न उघडता थेट अ‍ॅपमध्ये व्हिडिओ प्ले\n• 🪔 हँड्स-फ्री पूजा मोड: स्क्रीन सतत चालू, बोलून विधी सांगणारे TTS व मंदिराची घंटी\n• ⏰ अचूक अलार्म: पूर्वतयारी, खरेदी आणि शुभ मुहूर्त अलार्म\n• 📅 बहु-दिवसीय पंचांग: मागील व पुढील दिवसांचे पंचांग"
+    "en": "• 🛡️ Devotional Ad-Blocker: Blocks video pre-roll/mid-roll ads, banners, promotional popups & trackers for uninterrupted satsang\n• ⚡ Instant Auto-Skip: In-stream video ads are automatically muted and fast-forwarded instantly\n• 📺 Shree Ekdanta Channel: Watch all official devotional abhangs, bhajans & recitations in-app\n• 🪔 Hands-Free Puja Mode: Screen stays awake, step-by-step TTS voice recitation & bell chimes\n• 📅 Multi-Day Panchang: Browse past & future days with interactive date navigator",
+    "hi": "• 🛡️ भक्तिमय विज्ञापन-रोधी: निर्बाध सत्संग के लिए वीडियो विज्ञापनों, पॉपअप व बैनर विज्ञापनों को पूरी तरह ब्लॉक किया गया\n• ⚡ स्वचालित स्किप: इन-स्ट्रीम वीडियो विज्ञापन तुरंत म्यूट होकर स्वतः आगे बढ़ जाते हैं\n• 📺 श्री एकदंत चैनल: आधिकारिक भक्तिमय अभंग, भजन एवं सत्संग वीडियो सीधे ऐप में देखें\n• 🪔 हैंड्स-फ्री पूजा मोड: स्क्रीन हमेशा ऑन, बोलकर विधि सुनाने वाला TTS एवं घंटी नाद\n• 📅 बहु-दिवसीय पंचांग: बीते व आने वाले दिनों का पंचांग देखें",
+    "mr": "• 🛡️ पावन जाहिरातमुक्त सत्संग: अखंड भक्तीसाठी सर्व व्हिडिओ जाहिराती, पॉपअप्स व बॅनर्स पूर्णपणे बंद\n• ⚡ ऑटो-स्किप इंजिन: व्हिडिओ जाहिराती त्वरित म्यूट होऊन काही सेकंदात आपोआप पुढे जातात\n• 📺 श्री एकदंत चॅनेल: @ShreeEkdanta चॅनेलचे सर्व पावन अभंग, भजने आणि सत्संग व्हिडिओ थेट अ‍ॅपमध्ये पहा\n• 🪔 हँड्स-फ्री पूजा मोड: स्क्रीन सतत चालू, बोलून विधी सांगणारे TTS व मंदिराची घंटी\n• 📅 बहु-दिवसीय पंचांग: मागील व पुढील दिवसांचे पंचांग"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.2",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.2/app-release.apk",
-  "publishedDate": "2026-10-30"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.3",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.3/app-release.apk",
+  "publishedDate": "2026-10-31"
 }
