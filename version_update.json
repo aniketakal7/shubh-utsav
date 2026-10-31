@@ -1,8 +1,8 @@
 {
-  "latestVersionCode": 12,
+  "latestVersionCode": 11,
   "latestVersionName": "1.5.2",
-  "minSupportedVersionCode": 10,
-  "isForceUpdate": true,
+  "minSupportedVersionCode": 6,
+  "isForceUpdate": false,
   "titles": {
     "en": "Shubh Utsav 1.5.2 — Shree Ekdanta Devotional Videos! 🪔",
     "hi": "शुभ उत्सव 1.5.2 — श्री एकदंत पावन सत्संग व वीडियो! 🪔",
