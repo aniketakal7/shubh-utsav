@@ -39,36 +39,28 @@ import com.shubhutsav.app.ui.theme.VedicGoldDark
 import java.io.ByteArrayInputStream
 
 /**
- * Checks whether an incoming URL request belongs to known advertising networks,
- * video ad streams, or tracking beacons so they can be blocked at the network layer.
+ * Checks whether an incoming URL request belongs to known advertising networks.
+ * Requests to youtube.com or googlevideo.com are NEVER intercepted to ensure
+ * all video streams, decipher keys, and attestation tokens load seamlessly.
  */
 private fun isAdUrl(url: String): Boolean {
     val lower = url.lowercase()
+    if (lower.contains("youtube.com") || lower.contains("googlevideo.com") || lower.contains("youtu.be")) {
+        return false
+    }
     return lower.contains("doubleclick.net") ||
-            lower.contains("googleads") ||
-            lower.contains("pagead") ||
-            lower.contains("googlesyndication") ||
-            lower.contains("adservice.google") ||
-            lower.contains("youtube.com/api/stats/ads") ||
-            lower.contains("youtube.com/ptracking") ||
-            lower.contains("youtube.com/youtubei/v1/att/") ||
-            lower.contains("youtube.com/pagead/") ||
-            lower.contains("/pagead/lvp") ||
-            lower.contains("/pagead/adview") ||
-            lower.contains("adformat=") ||
-            lower.contains("ad_type=") ||
-            lower.contains("ad_tag=") ||
-            lower.contains("ad_unit=") ||
-            lower.contains("&ad_") ||
-            lower.contains("/ads?")
+            lower.contains("pagead2.googlesyndication.com") ||
+            lower.contains("googlesyndication.com") ||
+            lower.contains("googleads.g.doubleclick.net") ||
+            lower.contains("adservice.google.")
 }
 
 /**
  * JavaScript & CSS injection script:
- * 1. Permanently hides all YouTube banner ads, sponsored cards, promotional boxes, and app upsell popups via CSS.
- * 2. Continuously clicks "Skip Ad" buttons immediately as soon as they appear.
- * 3. Speeds up, mutes, and fast-forwards in-stream video ads to 0.05s before the end so they finish instantly.
- * 4. Removes sponsored recommendations from the channel feed.
+ * 1. Permanently hides all YouTube banner ads, sponsored feed cards, and app upsell popups via CSS.
+ * 2. Accurately detects in-stream video ads ONLY when the player has the 'ad-showing' or 'ad-interrupting' class.
+ * 3. Speeds up and skips ONLY the ad video, leaving regular long videos and shorts completely undisturbed.
+ * 4. Auto-clicks "Skip Ad" buttons as soon as they appear.
  */
 private val AD_BLOCK_SCRIPT = """
 (function() {
@@ -77,20 +69,6 @@ private val AD_BLOCK_SCRIPT = """
             const style = document.createElement('style');
             style.id = 'shubh-adblock-styles';
             style.textContent = `
-                .ytp-ad-module,
-                .ytp-ad-overlay-container,
-                .ytp-ad-message-container,
-                .video-ads,
-                .ytp-ad-player-overlay,
-                .ytp-ad-player-overlay-layout,
-                .ytp-ad-skip-button-container,
-                .ytp-ad-text,
-                .ytp-ad-preview-container,
-                .ytp-ad-image-overlay,
-                ytd-promoted-video-renderer,
-                ytd-banner-promo-renderer,
-                ytd-ad-slot-renderer,
-                ytd-in-feed-ad-layout-renderer,
                 ytm-promoted-sparkles-web-renderer,
                 ytm-promoted-sparkles-text-search-web-renderer,
                 ytm-companion-ad-renderer,
@@ -100,12 +78,14 @@ private val AD_BLOCK_SCRIPT = """
                 .ytm-open-app-banner-renderer,
                 #app-banner,
                 ytm-upsell-dialog-renderer,
-                .ad-container,
-                .ad-div,
-                #player-ads,
+                ytd-promoted-video-renderer,
+                ytd-banner-promo-renderer,
+                ytd-ad-slot-renderer,
+                ytd-in-feed-ad-layout-renderer,
                 .sparkles-light-cta,
                 .ytm-sparkles-cta,
-                ytm-item-section-renderer[data-ad-id] {
+                .ytp-ad-overlay-container,
+                .ytp-ad-image-overlay {
                     display: none !important;
                     visibility: hidden !important;
                     height: 0px !important;
@@ -118,31 +98,49 @@ private val AD_BLOCK_SCRIPT = """
         }
     }
 
-    function skipAndRemoveAds() {
+    function checkAndSkipAds() {
         injectAdBlockCss();
 
-        // 1. Click skip ad buttons immediately
-        const skipButtons = document.querySelectorAll(
-            '.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, .videoAdUiSkipButton, button.ytp-ad-skip-button-text, .ytp-ad-skip-button-container button, [class*="skip-button"], button.ytp-skip-ad-button'
-        );
-        for (let i = 0; i < skipButtons.length; i++) {
-            try { skipButtons[i].click(); } catch (e) {}
-        }
+        // 1. Accurately check if the player container is actively showing an in-stream ad
+        const player = document.querySelector('#movie_player, .html5-video-player');
+        const isAd = player && (player.classList.contains('ad-showing') || player.classList.contains('ad-interrupting'));
 
-        // 2. Fast forward video if in-stream ad is interrupting / showing
-        const adShowing = document.querySelector('.ad-showing, .ad-interrupting, .ytp-ad-player-overlay, [class*="ad-showing"], [class*="ad-interrupting"]');
-        const video = document.querySelector('video');
-        if (adShowing && video) {
+        if (isAd) {
+            // Fast-click any skip buttons
+            const skipButtons = document.querySelectorAll(
+                '.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, .videoAdUiSkipButton, button.ytp-ad-skip-button-text, .ytp-ad-skip-button-container button, [class*="skip-button"]'
+            );
+            for (let i = 0; i < skipButtons.length; i++) {
+                try { skipButtons[i].click(); } catch (e) {}
+            }
+
+            // Fast forward and mute ONLY the ad video
+            const video = player.querySelector('video') || document.querySelector('video');
+            if (video) {
+                try {
+                    video.muted = true;
+                    video.playbackRate = 16.0;
+                    if (!isNaN(video.duration) && isFinite(video.duration) && video.duration > 0) {
+                        video.currentTime = video.duration - 0.05;
+                    }
+                } catch(e) {}
+            }
+
+            // Call native player skipAd if available
             try {
-                video.muted = true;
-                video.playbackRate = 16.0;
-                if (!isNaN(video.duration) && isFinite(video.duration) && video.duration > 0) {
-                    video.currentTime = video.duration - 0.05;
+                if (typeof player.skipAd === 'function') {
+                    player.skipAd();
                 }
-            } catch (e) {}
+            } catch(e) {}
+        } else {
+            // Normal video is playing! Ensure normal playback rate
+            const video = document.querySelector('video');
+            if (video && video.playbackRate > 2.0) {
+                video.playbackRate = 1.0;
+            }
         }
 
-        // 3. Close ad overlays
+        // 2. Dismiss any floating ad close buttons
         const closeButtons = document.querySelectorAll(
             '.ytp-ad-overlay-close-button, .ytp-ad-overlay-close-container, button[aria-label="Close ad"]'
         );
@@ -150,7 +148,7 @@ private val AD_BLOCK_SCRIPT = """
             try { closeButtons[i].click(); } catch (e) {}
         }
 
-        // 4. Remove sponsored/feed promo elements
+        // 3. Remove sponsored/feed promo elements
         const promos = document.querySelectorAll(
             'ytm-promoted-sparkles-web-renderer, ytm-companion-ad-renderer, ytm-ad-slot-renderer, ytm-open-app-banner-renderer, ytm-upsell-dialog-renderer'
         );
@@ -160,16 +158,16 @@ private val AD_BLOCK_SCRIPT = """
     }
 
     // Run now
-    skipAndRemoveAds();
+    checkAndSkipAds();
 
     // Run periodically
     if (!window.__shubh_adblock_timer) {
-        window.__shubh_adblock_timer = setInterval(skipAndRemoveAds, 250);
+        window.__shubh_adblock_timer = setInterval(checkAndSkipAds, 300);
     }
 
     // Run on DOM changes
     if (!window.__shubh_adblock_observer && window.MutationObserver) {
-        window.__shubh_adblock_observer = new MutationObserver(skipAndRemoveAds);
+        window.__shubh_adblock_observer = new MutationObserver(checkAndSkipAds);
         window.__shubh_adblock_observer.observe(document.body || document.documentElement, {
             childList: true,
             subtree: true
