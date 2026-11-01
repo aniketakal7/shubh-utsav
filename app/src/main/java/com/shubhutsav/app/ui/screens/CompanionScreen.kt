@@ -27,7 +27,7 @@ import com.shubhutsav.app.data.CompanionSyncManager
 import com.shubhutsav.app.data.CommunityEvent
 import com.shubhutsav.app.data.getDate2026
 import com.shubhutsav.app.data.getName
-import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.*
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -136,11 +136,40 @@ fun CompanionScreen(
 @Composable private fun SectionTitle(text: String) = Text(text, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))
 
 @Composable private fun CompanionCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
-    ElevatedCard(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick), shape = RoundedCornerShape(8.dp)) { Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) { Icon(icon, null, Modifier.size(26.dp), tint = MaterialTheme.colorScheme.primary); Spacer(Modifier.width(14.dp)); Column(Modifier.weight(1f)) { Text(title, fontWeight = FontWeight.SemiBold); Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }; Icon(Icons.Default.ChevronRight, null) } }
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .bouncyClickable(pressedScale = 0.97f, onClick = onClick),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(icon, null, Modifier.size(26.dp), tint = MaterialTheme.colorScheme.primary)
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Icon(Icons.Default.ChevronRight, null)
+        }
+    }
 }
 
 @Composable private fun FestivalPlanRow(festival: Festival, language: String, planned: Boolean, onToggle: (Boolean) -> Unit, onCalendar: () -> Unit, onOpen: () -> Unit) {
-    ElevatedCard(shape = RoundedCornerShape(8.dp), modifier = Modifier.fillMaxWidth()) { Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) { Checkbox(checked = planned, onCheckedChange = onToggle); Column(Modifier.weight(1f).clickable(onClick = onOpen)) { Text("${festival.emoji} ${festival.getName(language)}", fontWeight = FontWeight.SemiBold); Text(festival.getDate2026(language), style = MaterialTheme.typography.bodySmall) }; IconButton(onClick = onCalendar) { Icon(Icons.Default.Event, "Add to calendar") } } }
+    ElevatedCard(
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(checked = planned, onCheckedChange = onToggle)
+            Column(Modifier.weight(1f).bouncyClickable(pressedScale = 0.98f, onClick = onOpen)) {
+                Text("${festival.emoji} ${festival.getName(language)}", fontWeight = FontWeight.SemiBold)
+                Text(festival.getDate2026(language), style = MaterialTheme.typography.bodySmall)
+            }
+            IconButton(onClick = onCalendar) { Icon(Icons.Default.Event, "Add to calendar") }
+        }
+    }
 }
 
 private fun addToCalendar(context: android.content.Context, festival: Festival) {

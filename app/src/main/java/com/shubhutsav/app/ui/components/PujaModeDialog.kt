@@ -4,6 +4,7 @@ import android.app.Activity
 import android.speech.tts.TextToSpeech
 import android.view.WindowManager
 import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -118,7 +119,11 @@ fun PujaModeDialog(
                             modifier = Modifier.size(36.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Text(text = "🪔", fontSize = 18.sp)
+                                Text(
+                                    text = "🪔",
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.pulsingScale(minScale = 0.94f, maxScale = 1.10f, durationMs = 1200)
+                                )
                             }
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -158,10 +163,18 @@ fun PujaModeDialog(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Progress Bar across steps
+                // Progress Bar across steps with animated spring
                 val progressFraction = if (totalSteps > 0) (currentStepIndex + 1).toFloat() / totalSteps else 0f
+                val animProgress by animateFloatAsState(
+                    targetValue = progressFraction,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "puja_step_progress"
+                )
                 LinearProgressIndicator(
-                    progress = { progressFraction },
+                    progress = { animProgress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)

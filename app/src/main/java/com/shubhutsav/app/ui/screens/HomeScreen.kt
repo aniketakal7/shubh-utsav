@@ -22,6 +22,7 @@ import com.shubhutsav.app.data.FestivalRepository
 import com.shubhutsav.app.ui.components.AppBottomNav
 import com.shubhutsav.app.ui.components.AppDest
 import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.bouncyClickable
 import com.shubhutsav.app.ui.components.CityPickerDialog
 import com.shubhutsav.app.ui.components.EmojiWell
 import com.shubhutsav.app.ui.components.FestivalMiniCard
@@ -146,7 +147,7 @@ fun HomeScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        EmojiWell(emoji = "🪔", tint = KesariyaSaffron, size = 56.dp, emojiSize = 28)
+                        EmojiWell(emoji = "🪔", tint = KesariyaSaffron, size = 56.dp, emojiSize = 28, enablePulse = true)
                     }
                 }
             }
@@ -515,13 +516,13 @@ private fun HomeActionCard(
     Surface(
         shape = RoundedCornerShape(22.dp),
         color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 2.dp,
+        shadowElevation = 3.dp,
         modifier = modifier
             .clip(RoundedCornerShape(22.dp))
-            .clickable(onClick = onClick)
+            .bouncyClickable(pressedScale = 0.95f, onClick = onClick)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            EmojiWell(emoji = icon, tint = accentColor, size = 48.dp, emojiSize = 24)
+            EmojiWell(emoji = icon, tint = accentColor, size = 48.dp, emojiSize = 24, enablePulse = false)
             Spacer(modifier = Modifier.height(14.dp))
             Text(
                 text = title,

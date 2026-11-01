@@ -121,10 +121,11 @@ fun AppUpdateDialog(
                     }
                 }
 
-                // Glowing Festive Icon
+                // Glowing Festive Icon with gentle breathing pulse
                 Box(
                     modifier = Modifier
                         .size(72.dp)
+                        .pulsingScale(minScale = 0.94f, maxScale = 1.08f, durationMs = 1400)
                         .clip(CircleShape)
                         .background(
                             Brush.radialGradient(

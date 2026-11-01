@@ -133,7 +133,7 @@ fun PanchangCard(
                     modifier = Modifier
                         .heightIn(min = 36.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .clickable(onClick = onChangeCityClick)
+                        .bouncyClickable(pressedScale = 0.94f, onClick = onChangeCityClick)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -392,6 +392,8 @@ fun PanchangCard(
                                 Box(
                                     modifier = Modifier
                                         .size(7.dp)
+                                        .pulsingScale(minScale = 0.85f, maxScale = 1.35f, durationMs = 1100)
+                                        .pulsingAlpha(minAlpha = 0.5f, maxAlpha = 1.0f, durationMs = 1100)
                                         .clip(CircleShape)
                                         .background(Color(0xFF81C784))
                                 )
@@ -518,7 +520,7 @@ fun PanchangCard(
                                 border = BorderStroke(0.8.dp, VedicGoldLight.copy(alpha = 0.4f)),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onChoghadiyaClick() }
+                                    .bouncyClickable(pressedScale = 0.96f) { onChoghadiyaClick() }
                             ) {
                                 Row(
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -549,7 +551,7 @@ fun PanchangCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 44.dp)
-                    .clickable { isExpanded = !isExpanded }
+                    .bouncyClickable(pressedScale = 0.96f) { isExpanded = !isExpanded }
                     .padding(top = 10.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically

@@ -39,9 +39,7 @@ import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.*
 import com.shubhutsav.app.notifications.AlarmScheduler
 import com.shubhutsav.app.notifications.NotificationHelper
-import com.shubhutsav.app.ui.components.AppTopBar
-import com.shubhutsav.app.ui.components.ExplainSimplyDialog
-import com.shubhutsav.app.ui.components.PujaModeDialog
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.AuspiciousRed
 import com.shubhutsav.app.ui.theme.CardBorderGold
 import com.shubhutsav.app.ui.theme.CardBorderSubtle
@@ -189,6 +187,7 @@ fun FestivalDetailScreen(
                             Box(
                                 modifier = Modifier
                                     .size(64.dp)
+                                    .pulsingScale(minScale = 0.95f, maxScale = 1.05f, durationMs = 1500)
                                     .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)),
                                 contentAlignment = Alignment.Center

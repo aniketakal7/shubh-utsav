@@ -32,7 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.*
-import com.shubhutsav.app.ui.components.AppTopBar
+import androidx.compose.animation.core.*
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.SuccessGreen
@@ -219,8 +220,17 @@ fun ShoppingScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    val animProgress by animateFloatAsState(
+                        targetValue = progressFraction,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        ),
+                        label = "shopping_progress"
+                    )
+
                     LinearProgressIndicator(
-                        progress = { progressFraction },
+                        progress = { animProgress },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(8.dp)
@@ -346,7 +356,7 @@ fun ShoppingScreen(
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
+                                .bouncyClickable(pressedScale = 0.98f) {
                                     prefs.toggleSupply(festival.id, origIndex)
                                     boughtCounter = prefs.getBoughtSuppliesCount(festival.id, festival.supplies.size)
                                     toggleCounter++

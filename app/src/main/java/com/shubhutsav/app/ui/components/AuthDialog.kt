@@ -118,7 +118,11 @@ fun AuthDialog(
                         .clip(CircleShape)
                         .background(PanchangCardGradient)
                 ) {
-                    Text(text = "🪔", fontSize = 26.sp)
+                    Text(
+                        text = "🪔",
+                        fontSize = 26.sp,
+                        modifier = Modifier.pulsingScale(minScale = 0.94f, maxScale = 1.08f, durationMs = 1400)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

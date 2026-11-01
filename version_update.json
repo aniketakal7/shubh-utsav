@@ -1,19 +1,19 @@
 {
-  "latestVersionCode": 13,
-  "latestVersionName": "1.5.4",
+  "latestVersionCode": 14,
+  "latestVersionName": "1.5.5",
   "minSupportedVersionCode": 6,
   "isForceUpdate": false,
   "titles": {
-    "en": "Shubh Utsav 1.5.4 — Full Video & Shorts Fix! 📺🪔",
-    "hi": "शुभ उत्सव 1.5.4 — पूरे वीडियो व शॉर्ट्स सहज प्लेबैक! 📺🪔",
-    "mr": "शुभ उत्सव १.५.४ — पूर्ण व्हिडिओ व शॉर्ट्स अखंड प्लेबॅक! 📺🪔"
+    "en": "Shubh Utsav 1.5.5 — Complete Animation & UI Polish! ✨🪔",
+    "hi": "शुभ उत्सव 1.5.5 — संपूर्ण एनिमेशन व भव्य UI सुधार! ✨🪔",
+    "mr": "शुभ उत्सव १.५.५ — संपूर्ण अ‍ॅनिमेशन व मनमोहक UI सुधारणा! ✨🪔"
   },
   "releaseNotes": {
-    "en": "• 📺 Full Video & Shorts Playback: Plays long devotional abhangs, kirtans & shorts smoothly with zero errors\n• 🛡️ Devotional Ad-Blocker: All external ads, banners & promotional popups blocked\n• ⚡ Refined Auto-Skip: In-stream ads are safely skipped without affecting normal video playback\n• 🪔 Hands-Free Puja Mode & Multi-Day Panchang",
-    "hi": "• 📺 पूर्ण वीडियो व शॉर्ट्स: लंबे पावन अभंग, कीर्तन एवं शॉर्ट्स बिना किसी रुकावट के पूरी तरह सहज चलते हैं\n• 🛡️ विज्ञापन-मुक्त अनुभव: सभी बाहरी विज्ञापन, बैनर व पॉपअप ब्लॉक किए गए\n• ⚡ सुरक्षित ऑटो-स्किप: सामान्य वीडियो को प्रभावित किए बिना केवल विज्ञापनों को तुरंत स्किप किया जाता है\n• 🪔 हैंड्स-फ्री पूजा मोड एवं बहु-दिवसीय पंचांग",
-    "mr": "• 📺 पूर्ण व्हिडिओ व शॉर्ट्स: मोठे पावन अभंग, कीर्तने आणि शॉर्ट्स कोणत्याही अडथळ्याविना सुरळीत सुरू राहतात\n• 🛡️ जाहिरातमुक्त सत्संग: बाहेरील सर्व जाहिराती, बॅनर्स व पॉपअप्स बंद\n• ⚡ सुरक्षित ऑटो-स्किप: मूळ व्हिडिओला कोणताही त्रास न होता केवळ जाहिराती आपोआप पुढे जातात\n• 🪔 हँड्स-फ्री पूजा मोड आणि बहु-दिवसीय पंचांग"
+    "en": "• 🌊 Fluid 60fps Navigation: Smooth page transitions and cross-fades throughout the entire app\n• 📳 Tactile Spring Physics: Natural spring bouncy feel on cards, buttons, year selector & action pills\n• 🪔 Devotional Micro-Animations: Sacred breathing Diya flame & real-time pulsing Muhurat beacons\n• 📿 Dynamic Odometer Rolls: Smooth vertical digit rolling for Japa Mala counter & spring progress bars\n• 🎵 Synchronized Lyrics Karaoke: Glowing highlight on active chanting line in Aarti Player",
+    "hi": "• 🌊 सहज 60fps नेविगेशन: स्क्रीन बदलने पर अति सुंदर व सहज स्लाइड और क्रॉस-फ़ेड प्रभाव\n• 📳 स्प्रिंग स्पर्श अनुभव: सभी कार्ड्स, बटन व फिल्टर पर जीवंत बाउंस फीडबैक\n• 🪔 पावन सूक्ष्म-एनिमेशन: दीया की जीवंत लौ एवं शुभ मुहूर्त के रियल-टाइम पल्स संकेत\n• 📿 ओडोमीटर रोलिंग काउंटर: जप माला में संख्याओं का सहज रोल व स्प्रिंग प्रोग्रेस बार\n• 🎵 कराओके आरती लिरिक्स: आरती में गाई जा रही पावन पंक्ति पर स्वर्णिम व मनमोहक प्रभाव",
+    "mr": "• 🌊 अखंड ६०fps नेव्हिगेशन: प्रत्येक स्क्रीन बदलताना अत्यंत सुरळीत व देखणा स्लाइड प्रभाव\n• 📳 स्प्रिंग स्पर्श अनुभव: सर्व कार्ड्स, बटन्स व पर्यायांवर जिवंत बाउंस फीडबॅक\n• 🪔 पावन सूक्ष्म-अ‍ॅनिमेशन: समईच्या तेजोमय ज्योतीचे स्पंदन आणि शुभ मुहूर्तांचे थेट संकेत\n• 📿 ओडोमीटर रोलिंग काउंटर: जप माळेत मण्यांची सुरळीत फिरणारी आकडेमोड व स्प्रिंग प्रोग्रेस बार\n• 🎵 सिंक्रोनाइज्ड आरती कराओके: आरती गायनात सुरू असलेल्या ओळीवर सुवर्ण झळाळी व हायलाइट"
   },
-  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.4",
-  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.4/app-release.apk",
-  "publishedDate": "2026-10-31"
+  "updateUrl": "https://github.com/aniketakal7/shubh-utsav/releases/tag/v1.5.5",
+  "directApkUrl": "https://github.com/aniketakal7/shubh-utsav/releases/download/v1.5.5/app-release.apk",
+  "publishedDate": "2026-11-01"
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,7 +33,7 @@ import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.AartiRepository
 import com.shubhutsav.app.data.SacredAarti
 import com.shubhutsav.app.data.SacredSoundPlayer
-import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.RoyalMaroonDark
@@ -138,7 +139,7 @@ fun AartiPlayerScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(16.dp))
-                                .clickable {
+                                .bouncyClickable(pressedScale = 0.90f) {
                                     scope.launch {
                                         bellRotation.animateTo(25f, tween(100))
                                         bellRotation.animateTo(-25f, tween(120))
@@ -175,12 +176,18 @@ fun AartiPlayerScreen(
                             )
                         }
 
-                        // Center Virtual Diya
+                        // Center Virtual Diya with sacred flickering flame
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(8.dp)
                         ) {
-                            Text("🪔", fontSize = 34.sp)
+                            Text(
+                                text = "🪔",
+                                fontSize = 34.sp,
+                                modifier = Modifier
+                                    .pulsingScale(minScale = 0.94f, maxScale = 1.12f, durationMs = 1100)
+                                    .pulsingAlpha(minAlpha = 0.8f, maxAlpha = 1.0f, durationMs = 1100)
+                            )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = when (language) {
@@ -199,7 +206,7 @@ fun AartiPlayerScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(16.dp))
-                                .clickable {
+                                .bouncyClickable(pressedScale = 0.90f) {
                                     scope.launch {
                                         shankhScale.animateTo(1.25f, tween(150))
                                         shankhScale.animateTo(1f, tween(250))
@@ -299,16 +306,36 @@ fun AartiPlayerScreen(
             ) {
                 itemsIndexed(currentAarti.lines) { index, line ->
                     val isCurrent = index == currentLineIndex && isPlaying
-                    val cardBg = if (isCurrent) KesariyaSaffron.copy(alpha = 0.15f) else Color.Transparent
-                    val borderColor = if (isCurrent) KesariyaSaffron else Color.Transparent
+                    val animCardBg by animateColorAsState(
+                        targetValue = if (isCurrent) KesariyaSaffron.copy(alpha = 0.16f) else Color.Transparent,
+                        animationSpec = tween(300),
+                        label = "lyric_bg"
+                    )
+                    val animBorderColor by animateColorAsState(
+                        targetValue = if (isCurrent) KesariyaSaffron else Color.Transparent,
+                        animationSpec = tween(300),
+                        label = "lyric_border"
+                    )
+                    val animScale by animateFloatAsState(
+                        targetValue = if (isCurrent) 1.02f else 1f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessMedium
+                        ),
+                        label = "lyric_scale"
+                    )
 
                     Surface(
                         shape = RoundedCornerShape(16.dp),
-                        color = cardBg,
-                        border = BorderStroke(1.5.dp, borderColor),
+                        color = animCardBg,
+                        border = BorderStroke(1.5.dp, animBorderColor),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
+                            .graphicsLayer {
+                                scaleX = animScale
+                                scaleY = animScale
+                            }
+                            .bouncyClickable(pressedScale = 0.98f) {
                                 currentLineIndex = index
                             }
                     ) {

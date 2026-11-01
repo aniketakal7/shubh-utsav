@@ -83,7 +83,7 @@ fun AppTopBar(
                         modifier = Modifier
                             .heightIn(min = 34.dp)
                             .clip(RoundedCornerShape(20.dp))
-                            .clickable(onClick = onCityClick)
+                            .bouncyClickable(pressedScale = 0.94f, onClick = onCityClick)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -138,7 +138,11 @@ fun AppTopBar(
                         .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "🪔", fontSize = 18.sp)
+                    Text(
+                        text = "🪔",
+                        fontSize = 18.sp,
+                        modifier = Modifier.pulsingScale(minScale = 0.94f, maxScale = 1.08f, durationMs = 1500)
+                    )
                 }
             }
         },

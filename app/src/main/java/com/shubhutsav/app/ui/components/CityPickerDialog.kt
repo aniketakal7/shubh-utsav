@@ -295,7 +295,7 @@ fun CityPickerDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .clickable(enabled = !isDetectingLocation) {
+                        .bouncyClickable(pressedScale = 0.96f, enabled = !isDetectingLocation) {
                             requestAutoDetect()
                         }
                 ) {
@@ -495,7 +495,7 @@ fun CityPickerDialog(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(14.dp))
-                                    .clickable {
+                                    .bouncyClickable(pressedScale = 0.97f) {
                                         onCitySelected(village)
                                         onDismiss()
                                     }
@@ -568,7 +568,7 @@ fun CityPickerDialog(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(14.dp))
-                                .clickable {
+                                .bouncyClickable(pressedScale = 0.97f) {
                                     onCitySelected(city)
                                     onDismiss()
                                 }

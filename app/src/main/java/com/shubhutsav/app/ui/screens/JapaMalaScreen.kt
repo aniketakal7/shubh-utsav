@@ -34,7 +34,7 @@ import com.shubhutsav.app.data.JapaMalaRepository
 import com.shubhutsav.app.data.PreferencesManager
 import com.shubhutsav.app.data.SacredMantra
 import com.shubhutsav.app.data.SacredSoundPlayer
-import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.AuspiciousRed
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
@@ -262,12 +262,28 @@ fun JapaMalaScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = "$currentBead",
-                                    fontSize = 64.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = Color.White
-                                )
+                                AnimatedContent(
+                                    targetState = currentBead,
+                                    transitionSpec = {
+                                        if (targetState > initialState) {
+                                            (slideInVertically { height -> height / 2 } + fadeIn(tween(150))).togetherWith(
+                                                slideOutVertically { height -> -height / 2 } + fadeOut(tween(150))
+                                            )
+                                        } else {
+                                            (slideInVertically { height -> -height / 2 } + fadeIn(tween(150))).togetherWith(
+                                                slideOutVertically { height -> height / 2 } + fadeOut(tween(150))
+                                            )
+                                        }
+                                    },
+                                    label = "bead_counter_anim"
+                                ) { targetCount ->
+                                    Text(
+                                        text = "$targetCount",
+                                        fontSize = 64.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = Color.White
+                                    )
+                                }
                                 Text(
                                     text = "/ 108",
                                     fontSize = 18.sp,
@@ -292,9 +308,18 @@ fun JapaMalaScreen(
 
                     Spacer(modifier = Modifier.height(14.dp))
 
-                    // Progress bar for the 108 beads
+                    // Animated Progress bar for the 108 beads
+                    val animBeadProgress by animateFloatAsState(
+                        targetValue = (currentBead / 108f).coerceIn(0f, 1f),
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessMediumLow
+                        ),
+                        label = "bead_progress"
+                    )
+
                     LinearProgressIndicator(
-                        progress = { (currentBead / 108f).coerceIn(0f, 1f) },
+                        progress = { animBeadProgress },
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
                             .height(8.dp)

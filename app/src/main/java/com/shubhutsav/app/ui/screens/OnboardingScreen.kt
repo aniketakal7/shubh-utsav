@@ -36,7 +36,7 @@ import com.shubhutsav.app.data.CityRepository
 import com.shubhutsav.app.location.LocationHelper
 import com.shubhutsav.app.location.LocationResult
 import com.shubhutsav.app.notifications.FestivalReminderReceiver
-import com.shubhutsav.app.ui.components.CityPickerDialog
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.OnboardingHeroGradient
 import com.shubhutsav.app.ui.theme.RoyalMaroon
@@ -246,10 +246,11 @@ fun OnboardingScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center
         ) {
-            // Welcoming Spiritual Medallion
+            // Welcoming Spiritual Medallion with gentle breathing glow
             Box(
                 modifier = Modifier
                     .size(96.dp)
+                    .pulsingScale(minScale = 0.95f, maxScale = 1.05f, durationMs = 1600)
                     .clip(CircleShape)
                     .background(OnboardingHeroGradient),
                 contentAlignment = Alignment.Center
@@ -261,7 +262,11 @@ fun OnboardingScreen(
                         .background(MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "🪔", fontSize = 44.sp)
+                    Text(
+                        text = "🪔",
+                        fontSize = 44.sp,
+                        modifier = Modifier.pulsingAlpha(minAlpha = 0.85f, maxAlpha = 1.0f, durationMs = 1600)
+                    )
                 }
             }
 

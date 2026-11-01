@@ -56,11 +56,11 @@ fun FestivalRowCard(
     Surface(
         shape = RoundedCornerShape(22.dp),
         color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 2.dp,
+        shadowElevation = 3.dp,
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(22.dp))
-            .clickable(onClick = onClick)
+            .bouncyClickable(pressedScale = 0.97f, onClick = onClick)
     ) {
         Row(
             modifier = Modifier
@@ -166,7 +166,7 @@ fun FestivalMiniCard(
         modifier = modifier
             .width(176.dp)
             .clip(RoundedCornerShape(24.dp))
-            .clickable(onClick = onClick)
+            .bouncyClickable(pressedScale = 0.95f, onClick = onClick)
     ) {
         Column {
             Box(

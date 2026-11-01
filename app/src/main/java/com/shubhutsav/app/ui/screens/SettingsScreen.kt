@@ -39,12 +39,7 @@ import com.shubhutsav.app.data.UpdateManager
 import com.shubhutsav.app.notifications.FestivalReminderReceiver
 import com.shubhutsav.app.notifications.NotificationHelper
 import com.shubhutsav.app.data.AuthManager
-import com.shubhutsav.app.ui.components.AppBottomNav
-import com.shubhutsav.app.ui.components.AppDest
-import com.shubhutsav.app.ui.components.AppTopBar
-import com.shubhutsav.app.ui.components.AuthDialog
-import com.shubhutsav.app.ui.components.CityPickerDialog
-import com.shubhutsav.app.ui.components.PremiumUpgradeDialog
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -322,7 +317,7 @@ fun SettingsScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { if (!isPremium) showPremiumDialog = true }
+                    .bouncyClickable(pressedScale = 0.97f) { if (!isPremium) showPremiumDialog = true }
             ) {
                 Row(
                     modifier = Modifier.padding(18.dp),
@@ -331,6 +326,7 @@ fun SettingsScreen(
                     Box(
                         modifier = Modifier
                             .size(50.dp)
+                            .pulsingScale(minScale = 0.94f, maxScale = 1.08f, durationMs = 1400)
                             .clip(RoundedCornerShape(14.dp))
                             .background(
                                 if (isPremium) Color.White.copy(alpha = 0.15f) else KesariyaSaffron.copy(alpha = 0.12f)

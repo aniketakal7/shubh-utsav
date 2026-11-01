@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
-import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.VedicGold
 import com.shubhutsav.app.ui.theme.VedicGoldDark
@@ -379,11 +379,12 @@ fun DevotionalVideosScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        // Ad-Free Shield Indicator
+                        // Ad-Free Shield Indicator with gentle pulse
                         Surface(
                             shape = RoundedCornerShape(12.dp),
                             color = Color(0xFF1B5E20).copy(alpha = 0.85f),
-                            border = BorderStroke(0.5.dp, Color(0xFF81C784).copy(alpha = 0.6f))
+                            border = BorderStroke(0.5.dp, Color(0xFF81C784).copy(alpha = 0.6f)),
+                            modifier = Modifier.pulsingScale(minScale = 0.96f, maxScale = 1.04f, durationMs = 1500)
                         ) {
                             Row(
                                 modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp),
@@ -412,7 +413,9 @@ fun DevotionalVideosScreen(
                         // Channel Home Reset button
                         IconButton(
                             onClick = { webViewRef?.loadUrl(channelUrl) },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier
+                                .size(36.dp)
+                                .bouncyClickable(pressedScale = 0.88f) { webViewRef?.loadUrl(channelUrl) }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Home,
@@ -425,7 +428,9 @@ fun DevotionalVideosScreen(
                         // Refresh button
                         IconButton(
                             onClick = { webViewRef?.reload() },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier
+                                .size(36.dp)
+                                .bouncyClickable(pressedScale = 0.88f) { webViewRef?.reload() }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,

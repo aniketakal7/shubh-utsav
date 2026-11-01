@@ -39,6 +39,7 @@ import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import com.shubhutsav.app.data.PreferencesManager
 import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.bouncyClickable
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.RoyalMaroonDark
@@ -633,7 +634,7 @@ fun GreetingsMakerScreen(
                                 .height(46.dp)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(Brush.linearGradient(theme.gradientColors))
-                                .clickable { selectedTheme = theme },
+                                .bouncyClickable(pressedScale = 0.94f) { selectedTheme = theme },
                             contentAlignment = Alignment.Center
                         ) {
                             if (isSelected) {

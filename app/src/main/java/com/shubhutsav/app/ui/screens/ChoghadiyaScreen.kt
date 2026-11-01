@@ -29,7 +29,7 @@ import com.shubhutsav.app.data.City
 import com.shubhutsav.app.data.PanchangCalculator
 import com.shubhutsav.app.data.ChoghadiyaSlot
 import com.shubhutsav.app.data.ChoghadiyaType
-import com.shubhutsav.app.ui.components.AppTopBar
+import com.shubhutsav.app.ui.components.*
 import com.shubhutsav.app.ui.theme.AbhijitAuspicious
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RahuKaalWarning
@@ -213,6 +213,8 @@ fun ChoghadiyaScreen(
                                     Box(
                                         modifier = Modifier
                                             .size(10.dp)
+                                            .pulsingScale(minScale = 0.8f, maxScale = 1.3f, durationMs = 1000)
+                                            .pulsingAlpha(minAlpha = 0.5f, maxAlpha = 1f, durationMs = 1000)
                                             .clip(CircleShape)
                                             .background(
                                                 if (currentSlot != null) {

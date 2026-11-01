@@ -44,6 +44,7 @@ import com.shubhutsav.app.ui.components.AppDest
 import com.shubhutsav.app.ui.components.FestivalRowCard
 import com.shubhutsav.app.ui.components.LanguageSegmentItem
 import com.shubhutsav.app.ui.components.PremiumUpgradeDialog
+import com.shubhutsav.app.ui.components.bouncyClickable
 import com.shubhutsav.app.ui.theme.KesariyaSaffron
 import com.shubhutsav.app.ui.theme.RoyalMaroon
 import com.shubhutsav.app.ui.theme.VedicGold
@@ -515,7 +516,7 @@ fun CalendarScreen(
                                                             .background(
                                                                 if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
                                                             )
-                                                            .clickable { selectedYear = yr }
+                                                            .bouncyClickable(pressedScale = 0.94f) { selectedYear = yr }
                                                             .padding(horizontal = 12.dp, vertical = 4.dp),
                                                         contentAlignment = Alignment.Center
                                                     ) {
@@ -698,7 +699,7 @@ fun CalendarScreen(
                     border = BorderStroke(1.dp, VedicGold.copy(alpha = 0.5f)),
                     modifier = Modifier
                         .clip(RoundedCornerShape(24.dp))
-                        .clickable {
+                        .bouncyClickable(pressedScale = 0.93f) {
                             coroutineScope.launch {
                                 lazyListState.animateScrollToItem(0)
                                 expandHeader()
